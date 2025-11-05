@@ -2,44 +2,80 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ficha de Equipo</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
+      font-family: "Segoe UI", Roboto, Arial, sans-serif;
+      background: #eef3f8;
       margin: 0;
-      padding: 20px;
-    }
-    .card {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      max-width: 600px;
-      margin: 0 auto;
-    }
-    h2 {
-      text-align: center;
+      padding: 0;
       color: #333;
     }
-    .titulo {
-      font-weight: bold;
-      font-size: 16px;
-      margin-top: 20px;
-      border-bottom: 1px solid #ddd;
-      padding-bottom: 5px;
-      color: #222;
+
+    .container {
+      max-width: 700px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
-    p {
-      margin: 4px 0;
-      padding-left: 10px;
-      color: #444;
+
+    h1 {
+      color: #0078d4;
+      font-size: 26px;
+      margin-bottom: 5px;
+    }
+
+    h2 {
+      font-size: 16px;
+      color: #666;
+      margin-top: 0;
+      font-weight: 400;
+    }
+
+    .section {
+      margin-top: 25px;
+    }
+
+    .section h3 {
+      font-size: 18px;
+      color: #0078d4;
+      margin-bottom: 10px;
+      border-bottom: 2px solid #0078d4;
+      display: inline-block;
+    }
+
+    .section p {
+      margin: 6px 0;
+      font-size: 15px;
+    }
+
+    .volver {
+      display: inline-block;
+      margin-bottom: 20px;
+      text-decoration: none;
+      background: #0078d4;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 6px;
+      transition: 0.3s;
+      font-weight: 500;
+    }
+
+    .volver:hover {
+      background: #005fa3;
     }
   </style>
 </head>
 <body>
-  <div class="card" id="contenedor">
-    <h2>Cargando...</h2>
+  <div class="container">
+    <a href="index.html" class="volver">⬅ Volver al listado</a>
+    <h1 id="nombre"></h1>
+    <h2 id="ubicacion"></h2>
+
+    <div id="contenido"></div>
   </div>
 
   <script>
@@ -47,56 +83,41 @@
       const params = new URLSearchParams(window.location.search);
       const id = params.get("id");
 
-      try {
-        const resp = await fetch("equipos.json?v=" + Date.now());
-        const data = await resp.json();
-        const eq = data[id];
+      const resp = await fetch("equipos.json?v=" + Date.now());
+      const data = await resp.json();
+      const eq = data[id];
 
-        if (!eq) {
-          document.getElementById("contenedor").innerHTML = "<h2>Equipo no encontrado</h2>";
-          return;
-        }
-
-        const cont = document.getElementById("contenedor");
-
-        let html = `
-          <h2>${eq.name}</h2>
-          <p><strong>Ubicación:</strong> ${eq.ubicacion || "-"}</p>
-          <p><strong>Estado General:</strong> ${eq["Estado General"] || "-"}</p>
-        `;
-
-        // --- Sección Consumo ---
-        if (eq["Compresor N°1"] || eq["Compresor N°2"]) {
-          html += `
-            <div class="titulo">Consumo</div>
-            ${eq["Compresor N°1"] ? `<p><strong>Compresor N°1:</strong> ${eq["Compresor N°1"]}</p>` : ""}
-            ${eq["Compresor N°2"] ? `<p><strong>Compresor N°2:</strong> ${eq["Compresor N°2"]}</p>` : ""}
-          `;
-        }
-
-        // --- Sección Presiones ---
-        if (eq["Circuito N°1"] || eq["Circuito N°2"]) {
-          html += `
-            <div class="titulo">Presiones</div>
-            ${eq["Circuito N°1"] ? `<p><strong>Circuito N°1:</strong> ${eq["Circuito N°1"]}</p>` : ""}
-            ${eq["Circuito N°2"] ? `<p><strong>Circuito N°2:</strong> ${eq["Circuito N°2"]}</p>` : ""}
-          `;
-        }
-
-        // --- Último servicio ---
-        if (eq["ultimo_servicio"]) {
-          html += `
-            <div class="titulo">Información general</div>
-            <p><strong>Último servicio:</strong> ${eq["ultimo_servicio"]}</p>
-          `;
-        }
-
-        cont.innerHTML = html;
-
-      } catch (err) {
-        document.getElementById("contenedor").innerHTML = "<h2>Error al cargar datos</h2>";
-        console.error(err);
+      if (!eq) {
+        document.querySelector(".container").innerHTML = "<p>Equipo no encontrado.</p>";
+        return;
       }
+
+      document.getElementById("nombre").textContent = eq.name || id;
+      document.getElementById("ubicacion").textContent = eq.ubicacion ? `Ubicación: ${eq.ubicacion}` : "";
+
+      const cont = document.getElementById("contenido");
+
+      cont.innerHTML = `
+        <div class="section">
+          <h3>Estado General</h3>
+          <p>${eq["Estado General"] || "-"}</p>
+        </div>
+        <div class="section">
+          <h3>Consumo</h3>
+          <p>${eq["Consumo"] || "-"}</p>
+          <p><strong>Compresor N°1:</strong> ${eq["Compresor N°1"] || "-"}</p>
+          <p><strong>Compresor N°2:</strong> ${eq["Compresor N°2"] || "-"}</p>
+        </div>
+        <div class="section">
+          <h3>Presiones</h3>
+          <p><strong>Circuito N°1:</strong> ${eq["Circuito N°1"] || "-"}</p>
+          <p><strong>Circuito N°2:</strong> ${eq["Circuito N°2"] || "-"}</p>
+        </div>
+        <div class="section">
+          <h3>Último Servicio</h3>
+          <p>${eq["ultimo_servicio"] || "-"}</p>
+        </div>
+      `;
     }
 
     cargarFicha();
