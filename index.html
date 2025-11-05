@@ -1,11 +1,239 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-<head><meta charset="utf-8"><title>Equipos</title></head>
+<head>
+  <meta charset="UTF-8">
+  <title>Equipos de Aire Acondicionado</title>
+  <style>
+    :root {
+      --color-primario: #0078d4;
+      --color-fondo: #eef3f8;
+      --color-card: #fff;
+      --color-texto: #333;
+      --color-secundario: #5b5b5b;
+    }
+
+    body {
+      font-family: "Segoe UI", Roboto, Arial, sans-serif;
+      background: var(--color-fondo);
+      margin: 0;
+      padding: 0;
+      color: var(--color-texto);
+    }
+
+    header {
+      text-align: center;
+      padding: 30px 10px;
+      background: linear-gradient(135deg, #0078d4, #005fa3);
+      color: white;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: 0.5px;
+    }
+
+    /* Contenedor principal */
+    main {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    /* Pestañas */
+    .tabs {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    .tab {
+      background: white;
+      color: var(--color-secundario);
+      padding: 10px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      font-weight: 600;
+    }
+
+    .tab:hover {
+      background: var(--color-primario);
+      color: white;
+    }
+
+    .tab.active {
+      background: var(--color-primario);
+      color: white;
+    }
+
+    /* Grid de tarjetas */
+    .equipos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--color-card);
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      transition: all 0.25s ease;
+      border: 1px solid #e0e0e0;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+    }
+
+    .card h3 {
+      margin-top: 0;
+      color: var(--color-primario);
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .card p {
+      margin: 6px 0;
+      font-size: 14px;
+    }
+
+    .card a {
+      display: inline-block;
+      margin-top: 10px;
+      background: var(--color-primario);
+      color: white;
+      padding: 8px 14px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    .card a:hover {
+      background: #005fa3;
+    }
+
+    /* Buscador */
+    .buscador {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 25px;
+    }
+
+    .buscador input {
+      width: 300px;
+      max-width: 90%;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+      outline: none;
+      transition: 0.3s;
+    }
+
+    .buscador input:focus {
+      border-color: var(--color-primario);
+      box-shadow: 0 0 4px rgba(0,120,212,0.4);
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      header h1 { font-size: 22px; }
+      .card { padding: 16px; }
+      .tab { font-size: 14px; padding: 8px 14px; }
+    }
+  </style>
+</head>
 <body>
-<h1>Listado de Equipos</h1>
-<ul>
-  <li><a href="ficha.html?id=AC-001">Aire Sala 1</a></li>
-  <li><a href="ficha.html?id=AC-002">Aire Oficina 2</a></li>
-</ul>
+  <header>
+    <h1>Panel de Equipos de Aire</h1>
+  </header>
+
+  <main>
+    <div class="buscador">
+      <input type="text" id="buscar" placeholder="🔍 Buscar equipo por nombre o ubicación...">
+    </div>
+
+    <div class="tabs" id="tabs"></div>
+
+    <div class="equipos" id="equipos"></div>
+  </main>
+
+  <script>
+    let equiposData = {};
+    let ubicaciones = [];
+    let ubicacionSeleccionada = "Todos";
+
+    async function cargarEquipos() {
+      const resp = await fetch("equipos.json?v=" + Date.now());
+      equiposData = await resp.json();
+
+      ubicaciones = [...new Set(Object.values(equiposData).map(eq => eq.ubicacion || "Sin ubicación"))];
+      ubicaciones.sort();
+      ubicaciones.unshift("Todos");
+
+      mostrarTabs();
+      mostrarEquipos("Todos");
+
+      document.getElementById("buscar").addEventListener("input", e => {
+        mostrarEquipos(ubicacionSeleccionada, e.target.value.toLowerCase());
+      });
+    }
+
+    function mostrarTabs() {
+      const tabsContainer = document.getElementById("tabs");
+      tabsContainer.innerHTML = "";
+
+      ubicaciones.forEach(ubic => {
+        const tab = document.createElement("div");
+        tab.className = "tab" + (ubic === ubicacionSeleccionada ? " active" : "");
+        tab.textContent = ubic;
+        tab.onclick = () => {
+          ubicacionSeleccionada = ubic;
+          mostrarTabs();
+          mostrarEquipos(ubic);
+        };
+        tabsContainer.appendChild(tab);
+      });
+    }
+
+    function mostrarEquipos(ubic, filtroTexto = "") {
+      const cont = document.getElementById("equipos");
+      cont.innerHTML = "";
+
+      const filtrados = Object.entries(equiposData)
+        .filter(([id, eq]) => 
+          (ubic === "Todos" || eq.ubicacion === ubic) &&
+          (eq.name?.toLowerCase().includes(filtroTexto) || 
+           eq.ubicacion?.toLowerCase().includes(filtroTexto))
+        );
+
+      if (filtrados.length === 0) {
+        cont.innerHTML = "<p style='text-align:center;color:#555;'>No hay equipos que coincidan con tu búsqueda.</p>";
+        return;
+      }
+
+      filtrados.forEach(([id, eq]) => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <h3>${eq.name}</h3>
+          <p><strong>Ubicación:</strong> ${eq.ubicacion || "-"}</p>
+          <p><strong>Estado:</strong> ${eq["Estado General"] || "-"}</p>
+          <a href="ficha.html?id=${id}">Ver ficha</a>
+        `;
+        cont.appendChild(card);
+      });
+    }
+
+    cargarEquipos();
+  </script>
 </body>
 </html>
