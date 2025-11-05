@@ -1,50 +1,105 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <title>Ficha de equipo</title>
+  <meta charset="UTF-8">
+  <title>Ficha de Equipo</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 2em; background: #f7f7f7; }
-    .card { background: white; padding: 1.5em; border-radius: 10px; box-shadow: 0 0 8px rgba(0,0,0,0.1); max-width: 400px; }
-    h1 { font-size: 1.4em; margin-bottom: .5em; }
-    p { margin: .3em 0; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+    .titulo {
+      font-weight: bold;
+      font-size: 16px;
+      margin-top: 20px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 5px;
+      color: #222;
+    }
+    p {
+      margin: 4px 0;
+      padding-left: 10px;
+      color: #444;
+    }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1 id="titulo">Cargando...</h1>
-    <div id="info"></div>
+  <div class="card" id="contenedor">
+    <h2>Cargando...</h2>
   </div>
 
-<script>
-async function load() {
-  const params = new URLSearchParams(location.search);
-  const id = params.get('id');
-  if (!id) { document.getElementById('titulo').innerText = 'ID no especificado'; return; }
+  <script>
+    async function cargarFicha() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get("id");
 
-  try {
-    const resp = await fetch('equipos.json');
-    const data = await resp.json();
-    const item = data[id];
+      try {
+        const resp = await fetch("equipos.json?v=" + Date.now());
+        const data = await resp.json();
+        const eq = data[id];
 
-    if (!item) {
-      document.getElementById('titulo').innerText = 'Equipo no encontrado: ' + id;
-      return;
+        if (!eq) {
+          document.getElementById("contenedor").innerHTML = "<h2>Equipo no encontrado</h2>";
+          return;
+        }
+
+        const cont = document.getElementById("contenedor");
+
+        let html = `
+          <h2>${eq.name}</h2>
+          <p><strong>Ubicación:</strong> ${eq.ubicacion || "-"}</p>
+          <p><strong>Estado General:</strong> ${eq["Estado General"] || "-"}</p>
+        `;
+
+        // --- Sección Consumo ---
+        if (eq["Compresor N°1"] || eq["Compresor N°2"]) {
+          html += `
+            <div class="titulo">Consumo</div>
+            ${eq["Compresor N°1"] ? `<p><strong>Compresor N°1:</strong> ${eq["Compresor N°1"]}</p>` : ""}
+            ${eq["Compresor N°2"] ? `<p><strong>Compresor N°2:</strong> ${eq["Compresor N°2"]}</p>` : ""}
+          `;
+        }
+
+        // --- Sección Presiones ---
+        if (eq["Circuito N°1"] || eq["Circuito N°2"]) {
+          html += `
+            <div class="titulo">Presiones</div>
+            ${eq["Circuito N°1"] ? `<p><strong>Circuito N°1:</strong> ${eq["Circuito N°1"]}</p>` : ""}
+            ${eq["Circuito N°2"] ? `<p><strong>Circuito N°2:</strong> ${eq["Circuito N°2"]}</p>` : ""}
+          `;
+        }
+
+        // --- Último servicio ---
+        if (eq["ultimo_servicio"]) {
+          html += `
+            <div class="titulo">Información general</div>
+            <p><strong>Último servicio:</strong> ${eq["ultimo_servicio"]}</p>
+          `;
+        }
+
+        cont.innerHTML = html;
+
+      } catch (err) {
+        document.getElementById("contenedor").innerHTML = "<h2>Error al cargar datos</h2>";
+        console.error(err);
+      }
     }
 
-    document.getElementById('titulo').innerText = item.name + ' (' + id + ')';
-    document.getElementById('info').innerHTML = `
-      <p><strong>Ubicación:</strong> ${item.ubicacion || '-'}</p>
-      <p><strong>Marca:</strong> ${item.marca || '-'}</p>
-      <p><strong>Amp:</strong> ${item.modelo || '5.77'}</p>
-      <p><strong>Presión:</strong> ${item.valor1 || '111 PSI'}</p>
-      <p><strong>Último servicio:</strong> ${item.ultimo_servicio || '-'}</p>
-    `;
-  } catch(e) {
-    document.getElementById('titulo').innerText = 'Error al cargar datos';
-  }
-}
-load();
-</script>
+    cargarFicha();
+  </script>
 </body>
 </html>
