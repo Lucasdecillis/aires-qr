@@ -54,6 +54,7 @@
   "RT-05": {
     "name": "Rooftop 05",
     "ubicacion": "Techo 2",
+    "salida": "PB Baños/ Escaleras Mecánicas",
     "Estado General": "",
     "Consumo": "",
     "Compresor N°1": "",
