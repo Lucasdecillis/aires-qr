@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Equipos de Aire Acondicionado</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel de Equipos - Terrazas</title>
   <style>
     :root {
       --color-primario: #0078d4;
@@ -22,26 +23,85 @@
 
     header {
       text-align: center;
-      padding: 30px 10px;
+      padding: 25px 10px;
       background: linear-gradient(135deg, #0078d4, #005fa3);
       color: white;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
     }
 
     header h1 {
       margin: 0;
-      font-size: 28px;
-      letter-spacing: 0.5px;
+      font-size: 26px;
     }
 
-    /* Contenedor principal */
     main {
       max-width: 1000px;
       margin: 40px auto;
       padding: 0 20px;
     }
 
-    /* Pestañas */
+    .accordion {
+      background: var(--color-card);
+      border-radius: 14px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .accordion-header {
+      background: var(--color-primario);
+      color: white;
+      padding: 18px 20px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 18px;
+    }
+
+    .accordion-header:hover {
+      background: #005fa3;
+    }
+
+    .accordion-content {
+      display: none;
+      padding: 20px;
+      background: var(--color-fondo);
+    }
+
+    .accordion-content.active {
+      display: block;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .buscador {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 25px;
+    }
+
+    .buscador input {
+      width: 300px;
+      max-width: 90%;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+      outline: none;
+      transition: 0.3s;
+    }
+
+    .buscador input:focus {
+      border-color: var(--color-primario);
+      box-shadow: 0 0 5px rgba(0, 120, 212, 0.4);
+    }
+
     .tabs {
       display: flex;
       justify-content: center;
@@ -57,21 +117,16 @@
       border-radius: 20px;
       cursor: pointer;
       transition: all 0.25s ease;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
       font-weight: 600;
     }
 
-    .tab:hover {
-      background: var(--color-primario);
-      color: white;
-    }
-
+    .tab:hover,
     .tab.active {
       background: var(--color-primario);
       color: white;
     }
 
-    /* Grid de tarjetas */
     .equipos {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -82,14 +137,14 @@
       background: var(--color-card);
       border-radius: 14px;
       padding: 20px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
       transition: all 0.25s ease;
       border: 1px solid #e0e0e0;
     }
 
     .card:hover {
       transform: translateY(-4px);
-      box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
     }
 
     .card h3 {
@@ -119,51 +174,26 @@
     .card a:hover {
       background: #005fa3;
     }
-
-    /* Buscador */
-    .buscador {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 25px;
-    }
-
-    .buscador input {
-      width: 300px;
-      max-width: 90%;
-      padding: 10px 14px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 15px;
-      outline: none;
-      transition: 0.3s;
-    }
-
-    .buscador input:focus {
-      border-color: var(--color-primario);
-      box-shadow: 0 0 4px rgba(0,120,212,0.4);
-    }
-
-    /* Responsive */
-    @media (max-width: 600px) {
-      header h1 { font-size: 22px; }
-      .card { padding: 16px; }
-      .tab { font-size: 14px; padding: 8px 14px; }
-    }
   </style>
 </head>
 <body>
   <header>
-    <h1>Panel de Equipos de Aire</h1>
+    <h1>Panel de Equipos</h1>
   </header>
 
   <main>
-    <div class="buscador">
-      <input type="text" id="buscar" placeholder="🔍 Buscar equipo por nombre o ubicación...">
+    <div class="accordion">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        Terrazas <span>▼</span>
+      </div>
+      <div class="accordion-content">
+        <div class="buscador">
+          <input type="text" id="buscar" placeholder="🔍 Buscar equipo o ubicación...">
+        </div>
+        <div class="tabs" id="tabs"></div>
+        <div class="equipos" id="equipos"></div>
+      </div>
     </div>
-
-    <div class="tabs" id="tabs"></div>
-
-    <div class="equipos" id="equipos"></div>
   </main>
 
   <script>
@@ -225,12 +255,20 @@
         card.className = "card";
         card.innerHTML = `
           <h3>${eq.name}</h3>
-          <p><strong>Ubicación:</strong> ${eq.ubicacion || "-"}</p>
-          <p><strong>Estado:</strong> ${eq["Estado General"] || "-"}</p>
+          <p><strong>Ubicación:</strong> ${eq.ubicacion || '-'}</p>
+          <p><strong>Salida:</strong> ${eq.salida || '-'}</p>
+          <p><strong>Último servicio:</strong> ${eq.ultimo_servicio || 'Sin datos'}</p>
           <a href="ficha.html?id=${id}">Ver ficha</a>
         `;
         cont.appendChild(card);
       });
+    }
+
+    function toggleAccordion(header) {
+      const content = header.nextElementSibling;
+      const icon = header.querySelector("span");
+      const isActive = content.classList.toggle("active");
+      icon.textContent = isActive ? "▲" : "▼";
     }
 
     cargarEquipos();
