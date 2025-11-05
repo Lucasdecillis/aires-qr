@@ -1,0 +1,18 @@
+{
+  "AC-001": {
+    "name": "Aire Sala 1",
+    "ubicacion": "Sala 1",
+    "marca": "LG",
+    "modelo": "Model X",
+    "valor1": "24°C",
+    "ultimo_servicio": "2025-10-01"
+  },
+  "AC-002": {
+    "name": "Aire Oficina 2",
+    "ubicacion": "Oficina 2",
+    "marca": "Daikin",
+    "modelo": "Model Y",
+    "valor1": "22°C",
+    "ultimo_servicio": "2025-09-10"
+  }
+}
