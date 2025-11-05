@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Ficha de equipo</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2em; background: #f7f7f7; }
+    .card { background: white; padding: 1.5em; border-radius: 10px; box-shadow: 0 0 8px rgba(0,0,0,0.1); max-width: 400px; }
+    h1 { font-size: 1.4em; margin-bottom: .5em; }
+    p { margin: .3em 0; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1 id="titulo">Cargando...</h1>
+    <div id="info"></div>
+  </div>
+
+<script>
+async function load() {
+  const params = new URLSearchParams(location.search);
+  const id = params.get('id');
+  if (!id) { document.getElementById('titulo').innerText = 'ID no especificado'; return; }
+
+  try {
+    const resp = await fetch('equipos.json');
+    const data = await resp.json();
+    const item = data[id];
+
+    if (!item) {
+      document.getElementById('titulo').innerText = 'Equipo no encontrado: ' + id;
+      return;
+    }
+
+    document.getElementById('titulo').innerText = item.name + ' (' + id + ')';
+    document.getElementById('info').innerHTML = `
+      <p><strong>Ubicación:</strong> ${item.ubicacion || '-'}</p>
+      <p><strong>Marca:</strong> ${item.marca || '-'}</p>
+      <p><strong>Modelo:</strong> ${item.modelo || '-'}</p>
+      <p><strong>Temperatura:</strong> ${item.valor1 || '-'}</p>
+      <p><strong>Último servicio:</strong> ${item.ultimo_servicio || '-'}</p>
+    `;
+  } catch(e) {
+    document.getElementById('titulo').innerText = 'Error al cargar datos';
+  }
+}
+load();
+</script>
+</body>
+</html>
