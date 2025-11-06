@@ -47,8 +47,8 @@
       padding: 15px;
       margin-bottom: 10px;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      cursor: pointer;
       transition: all 0.2s;
+      cursor: pointer;
     }
     .equipo:hover {
       background: #f7fbff;
@@ -64,20 +64,6 @@
     }
     .header span {
       color: #555;
-    }
-    .detalles {
-      margin-top: 10px;
-      display: none;
-      border-top: 1px solid #ddd;
-      padding-top: 10px;
-    }
-    .detalles p {
-      margin: 5px 0;
-      display: flex;
-      justify-content: space-between;
-      background: #f2f4f7;
-      padding: 5px 10px;
-      border-radius: 6px;
     }
   </style>
 </head>
@@ -103,11 +89,8 @@
         const empresa1Keys = keys.slice(0, mitad);
         const empresa2Keys = keys.slice(mitad);
 
-        const empresa1Div = document.getElementById("empresa1");
-        const empresa2Div = document.getElementById("empresa2");
-
-        renderEmpresa(empresa1Div, data, empresa1Keys);
-        renderEmpresa(empresa2Div, data, empresa2Keys);
+        renderEmpresa(document.getElementById("empresa1"), data, empresa1Keys);
+        renderEmpresa(document.getElementById("empresa2"), data, empresa2Keys);
       } catch (err) {
         console.error("Error al cargar equipos:", err);
       }
@@ -121,7 +104,6 @@
         const equipoDiv = document.createElement("div");
         equipoDiv.className = "equipo";
 
-        // encabezado (visible siempre)
         equipoDiv.innerHTML = `
           <div class="header">
             <strong>${eq.name || key}</strong>
@@ -133,20 +115,9 @@
           </div>
         `;
 
-        // detalles (ocultos por defecto)
-        const detalles = document.createElement("div");
-        detalles.className = "detalles";
-        for (const [campo, valor] of Object.entries(eq)) {
-          if (!["name", "ubicacion", "salida", "ultimo_servicio"].includes(campo)) {
-            detalles.innerHTML += `<p><strong>${campo}:</strong><span>${valor || "-"}</span></p>`;
-          }
-        }
-        equipoDiv.appendChild(detalles);
-
-        // alternar visibilidad al hacer clic
+        // 👉 Al hacer clic, ir a ficha.html
         equipoDiv.addEventListener("click", () => {
-          detalles.style.display =
-            detalles.style.display === "block" ? "none" : "block";
+          window.location.href = `ficha.html?equipo=${encodeURIComponent(key)}`;
         });
 
         container.appendChild(equipoDiv);
