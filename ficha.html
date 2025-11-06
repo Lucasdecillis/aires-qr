@@ -3,131 +3,68 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ficha del Equipo</title>
+  <title>Ficha de Equipo</title>
   <style>
     body {
-      font-family: "Segoe UI", Roboto, sans-serif;
-      background-color: #f5f7fa;
-      color: #333;
-      margin: 0;
-      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f6f7f9;
+      padding: 20px;
     }
-
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #0078d4;
-      color: white;
-      padding: 16px 20px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      position: relative;
-    }
-
-    header img {
-      position: absolute;
-      left: 20px;
-      height: 65px;
-      width: auto;
-      border-radius: 10px;
-    }
-
-    header h1 {
-      font-size: 1.6em;
-      margin: 0;
-    }
-
-    .container {
-      max-width: 600px;
-      margin: 30px auto;
+    .card {
+      max-width: 500px;
+      margin: auto;
       background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      padding: 25px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      padding: 20px;
     }
-
+    h1 { text-align: center; }
     h2 {
-      color: #0078d4;
-      margin-bottom: 10px;
-      border-bottom: 2px solid #0078d4;
-      padding-bottom: 6px;
-    }
-
-    p {
-      margin: 8px 0;
-      line-height: 1.5;
-      font-size: 1em;
-    }
-
-    strong {
-      font-weight: 600;
-    }
-
-    a.volver {
-      display: inline-block;
       margin-top: 20px;
-      text-decoration: none;
-      color: white;
-      background-color: #0078d4;
-      padding: 10px 15px;
-      border-radius: 6px;
-      font-weight: 500;
-      transition: background-color 0.2s ease;
+      font-size: 1.1em;
+      color: #333;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 4px;
     }
-
-    a.volver:hover {
-      background-color: #005fa3;
-    }
+    p { margin: 6px 0; }
   </style>
 </head>
 <body>
-  <header>
-    <img src="1762428248701.png" alt="Logo">
-    <h1>Control de Equipos HVAC</h1>
-  </header>
-
-  <div class="container" id="ficha">
-    <p>Cargando información...</p>
+  <div class="card">
+    <h1 id="equipo-nombre">Equipo</h1>
+    <div id="equipo-detalle">Cargando...</div>
   </div>
 
   <script>
-    async function loadFicha() {
-      const params = new URLSearchParams(window.location.search);
-      const id = params.get("id");
-      const src = params.get("src");
-      const ficha = document.getElementById("ficha");
-
-      try {
-        const response = await fetch(src);
-        const data = await response.json();
-        const eq = data[id];
-
-        if (!eq) {
-          ficha.innerHTML = "<p>No se encontró información para este equipo.</p>";
+    fetch('equipos.json')
+      .then(response => response.json())
+      .then(data => {
+        const params = new URLSearchParams(window.location.search);
+        const equipoID = params.get('id');
+        const e = data[equipoID];
+        if (!e) {
+          document.getElementById('equipo-detalle').innerHTML = "Equipo no encontrado.";
           return;
         }
 
-        ficha.innerHTML = `
-          <h2>${eq.name || id}</h2>
-          ${eq.ubicacion ? `<p><strong>Ubicación:</strong> ${eq.ubicacion}</p>` : ""}
-          ${eq.salida ? `<p><strong>Salida:</strong> ${eq.salida}</p>` : ""}
-          ${eq["Estado General"] ? `<p><strong>Estado General:</strong> ${eq["Estado General"]}</p>` : ""}
-          ${eq.Consumo ? `<p><strong>Consumo:</strong> ${eq.Consumo}</p>` : ""}
-          ${eq["Presión"] ? `<p><strong>Presión:</strong> ${eq["Presión"]}</p>` : ""}
-          ${eq["Compresor N°1"] ? `<p><strong>Compresor N°1:</strong> ${eq["Compresor N°1"]}</p>` : ""}
-          ${eq["Compresor N°2"] ? `<p><strong>Compresor N°2:</strong> ${eq["Compresor N°2"]}</p>` : ""}
-          ${eq["Circuito N°1"] ? `<p><strong>Circuito N°1:</strong> ${eq["Circuito N°1"]}</p>` : ""}
-          ${eq["Circuito N°2"] ? `<p><strong>Circuito N°2:</strong> ${eq["Circuito N°2"]}</p>` : ""}
-          ${eq.ultimo_servicio ? `<p><strong>Último servicio:</strong> ${eq.ultimo_servicio}</p>` : ""}
-          <a href="index.html" class="volver">⬅ Volver</a>
-        `;
-      } catch (error) {
-        ficha.innerHTML = "<p style='color:red;'>Error al cargar los datos.</p>";
-        console.error(error);
-      }
-    }
+        document.getElementById('equipo-nombre').textContent = e.name;
+        document.getElementById('equipo-detalle').innerHTML = `
+          <p><strong>Ubicación:</strong> ${e.ubicacion}</p>
+          <p><strong>Salida:</strong> ${e.salida}</p>
+          <p><strong>Estado General:</strong> ${e["Estado General"]}</p>
 
-    loadFicha();
+          <h2>Consumo</h2>
+          <p><strong>Compresor N°1:</strong> ${e["Compresor N°1"]}</p>
+          <p><strong>Compresor N°2:</strong> ${e["Compresor N°2"]}</p>
+
+          <h2>Presión</h2>
+          <p><strong>Circuito N°1:</strong> ${e["Circuito N°1"]}</p>
+          <p><strong>Circuito N°2:</strong> ${e["Circuito N°2"]}</p>
+
+          <h2>Último servicio</h2>
+          <p>${e.ultimo_servicio}</p>
+        `;
+      });
   </script>
 </body>
 </html>
