@@ -55,14 +55,16 @@
     "name": "Rooftop 05",
     "ubicacion": "Techo 2",
     "salida": "",
-    "Estado General": "",
+    "Estado General": "OK",
     "Consumo": "",
-    "Compresor N°1": "",
-    "Compresor N°2": "",
+    "Compresor N°1": "13 Amper",
+    "Compresor N°2": "12 Amper",
     "Presión": "",
-    "Circuito N°1": "",
-    "Circuito N°2": "",
-    "ultimo_servicio": ""
+    "Succión Circuito N°1": "120 PSI",
+"Descarga Circuito N°1": "360 PSI",
+    "Succión Circuito N°2": "120 PSI",
+"Descarga Circuito N°2": "360 PSI",
+    "ultimo_servicio": "14/10/2025"
   },
   "RT-06": {
     "name": "Rooftop 06",
