@@ -59,6 +59,19 @@
       transition: background-color 0.2s ease;
       border-radius: 10px;
       margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .accordion::after {
+      content: '+';
+      font-weight: bold;
+      transition: transform 0.2s ease;
+    }
+
+    .accordion.active::after {
+      content: '−';
     }
 
     .accordion:hover {
@@ -66,13 +79,18 @@
     }
 
     .panel {
-      display: none;
+      max-height: 0;
       overflow: hidden;
+      transition: max-height 0.3s ease-out;
       background-color: white;
       border-radius: 10px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      padding: 15px;
+      padding: 0 15px;
       margin-bottom: 15px;
+    }
+
+    .panel.open {
+      padding: 15px;
     }
 
     .equipos-grid {
@@ -148,59 +166,61 @@
   </div>
 
   <script>
-    // Desplegable tipo acordeón
-    const acc = document.getElementsByClassName("accordion");
-    for (let i = 0; i < acc.length; i++) {
-      acc[i].addEventListener("click", function() {
-        this.classList.toggle("active");
-        const panel = this.nextElementSibling;
-        panel.style.display = panel.style.display === "block" ? "none" : "block";
-      });
-    }
+    // --- Acordeones con animación ---
+    document.querySelectorAll(".accordion").forEach(btn => {
+      btn.addEventListener("click", () => {
+        btn.classList.toggle("active");
+        const panel = btn.nextElementSibling;
 
-    // Función general para mostrar cada grupo de equipos
+        if (panel.style.maxHeight) {
+          panel.style.maxHeight = null;
+          panel.classList.remove("open");
+        } else {
+          panel.style.maxHeight = panel.scrollHeight + "px";
+          panel.classList.add("open");
+        }
+      });
+    });
+
+    // --- Cargar equipos dinámicamente ---
     async function cargarEquipos() {
       try {
-        // === TERrazas ===
-        const resTer = await fetch("equipos.json");
-        const dataTer = await resTer.json();
-        const listaTer = document.getElementById("lista-terrazas");
+        const cargar = async (archivo, contenedorId, origen) => {
+          const res = await fetch(archivo);
+          const data = await res.json();
+          const lista = document.getElementById(contenedorId);
 
-        for (const id in dataTer) {
-          const eq = dataTer[id];
-          const card = document.createElement("a");
-          card.href = `ficha.html?id=${id}&src=equipos.json`;
-          card.innerHTML = `
-            <div class="equipo-card">
-              <h3>${eq.name || id}</h3>
-              ${eq.ubicacion ? `<p><strong>Ubicación:</strong> ${eq.ubicacion}</p>` : ""}
-              ${eq.salida ? `<p><strong>Salida:</strong> ${eq.salida}</p>` : ""}
-              ${eq["Estado General"] ? `<p><strong>Estado General:</strong> ${eq["Estado General"]}</p>` : ""}
-              ${eq.Consumo ? `<p><strong>Consumo:</strong> ${eq.Consumo}</p>` : ""}
-              ${eq["Presión"] ? `<p><strong>Presión:</strong> ${eq["Presión"]}</p>` : ""}
-              ${eq["Compresor N°1"] ? `<p><strong>Compresor N°1:</strong> ${eq["Compresor N°1"]}</p>` : ""}
-              ${eq["Compresor N°2"] ? `<p><strong>Compresor N°2:</strong> ${eq["Compresor N°2"]}</p>` : ""}
-              ${eq["Circuito N°1"] ? `<p><strong>Circuito N°1:</strong> ${eq["Circuito N°1"]}</p>` : ""}
-              ${eq["Circuito N°2"] ? `<p><strong>Circuito N°2:</strong> ${eq["Circuito N°2"]}</p>` : ""}
-              ${eq.ultimo_servicio ? `<p><strong>Último servicio:</strong> ${eq.ultimo_servicio}</p>` : ""}
-            </div>`;
-          listaTer.appendChild(card);
-        }
+          for (const id in data) {
+            const eq = data[id];
+            const card = document.createElement("a");
+            card.href = `ficha.html?id=${id}&src=${archivo}`;
+            card.innerHTML = `
+              <div class="equipo-card">
+                <h3>${eq.name || id}</h3>
+                ${eq.ubicacion ? `<p><strong>Ubicación:</strong> ${eq.ubicacion}</p>` : ""}
+                ${eq.salida ? `<p><strong>Salida:</strong> ${eq.salida}</p>` : ""}
+                ${eq["Estado General"] ? `<p><strong>Estado General:</strong> ${eq["Estado General"]}</p>` : ""}
+                ${eq.Consumo ? `<p><strong>Consumo:</strong> ${eq.Consumo}</p>` : ""}
+                ${eq["Presión"] ? `<p><strong>Presión:</strong> ${eq["Presión"]}</p>` : ""}
+                ${eq["Compresor N°1"] ? `<p><strong>Compresor N°1:</strong> ${eq["Compresor N°1"]}</p>` : ""}
+                ${eq["Compresor N°2"] ? `<p><strong>Compresor N°2:</strong> ${eq["Compresor N°2"]}</p>` : ""}
+                ${eq["Circuito N°1"] ? `<p><strong>Circuito N°1:</strong> ${eq["Circuito N°1"]}</p>` : ""}
+                ${eq["Circuito N°2"] ? `<p><strong>Circuito N°2:</strong> ${eq["Circuito N°2"]}</p>` : ""}
+                ${eq.ultimo_servicio ? `<p><strong>Último servicio:</strong> ${eq.ultimo_servicio}</p>` : ""}
+              </div>`;
+            lista.appendChild(card);
+          }
+        };
 
-        // === CAPEX ===
-        const resCapex = await fetch("splits.json");
-        const dataCapex = await resCapex.json();
-        const listaCapex = document.getElementById("lista-capex");
+        await cargar("equipos.json", "lista-terrazas");
+        await cargar("splits.json", "lista-capex");
 
-        for (const id in dataCapex) {
-          const eq = dataCapex[id];
-          const card = document.createElement("a");
-          card.href = `ficha.html?id=${id}&src=splits.json`;
-          card.innerHTML = `
-            <div class="equipo-card">
-              <h3>${eq.name || id}</h3>
-              ${eq.ubicacion ? `<p><strong>Ubicación:</strong> ${eq.ubicacion}</p>` : ""}
-              ${eq["Estado General"] ? `<p><strong>Estado General:</strong> ${eq["Estado General"]}</p>` : ""}
-              ${eq.Consumo ? `<p><strong>Consumo:</strong> ${eq.Consumo}</p>` : ""}
-              ${eq["Presión"] ? `<p><strong>Presión:</strong> ${eq["Presión"]}</p>` : ""}
-              ${eq["Compresor N°1"] ? `<p><strong>Compresor N°1:</strong> ${eq["Compresor N°1"]}</p>` : ""}
+      } catch (error) {
+        console.error("Error al cargar los datos:", error);
+      }
+    }
+
+    cargarEquipos();
+  </script>
+</body>
+</html>
