@@ -1,126 +1,133 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ficha de Equipo</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ficha del Equipo</title>
   <style>
     body {
-      font-family: "Segoe UI", Roboto, Arial, sans-serif;
-      background: #eef3f8;
+      font-family: "Segoe UI", Roboto, sans-serif;
+      background-color: #f5f7fa;
+      color: #333;
       margin: 0;
       padding: 0;
-      color: #333;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #0078d4;
+      color: white;
+      padding: 16px 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    header img {
+      position: absolute;
+      left: 20px;
+      height: 65px;
+      width: auto;
+      border-radius: 10px;
+    }
+
+    header h1 {
+      font-size: 1.6em;
+      margin: 0;
     }
 
     .container {
-      max-width: 700px;
-      margin: 40px auto;
+      max-width: 600px;
+      margin: 30px auto;
       background: white;
-      padding: 30px;
-      border-radius: 14px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-
-    h1 {
-      color: #0078d4;
-      font-size: 26px;
-      margin-bottom: 5px;
+      border-radius: 12px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 25px;
     }
 
     h2 {
-      font-size: 16px;
-      color: #666;
-      margin-top: 0;
-      font-weight: 400;
-    }
-
-    .section {
-      margin-top: 25px;
-    }
-
-    .section h3 {
-      font-size: 18px;
       color: #0078d4;
       margin-bottom: 10px;
       border-bottom: 2px solid #0078d4;
-      display: inline-block;
+      padding-bottom: 6px;
     }
 
-    .section p {
-      margin: 6px 0;
-      font-size: 15px;
+    p {
+      margin: 8px 0;
+      line-height: 1.5;
+      font-size: 1em;
     }
 
-    .volver {
+    strong {
+      font-weight: 600;
+    }
+
+    a.volver {
       display: inline-block;
-      margin-bottom: 20px;
+      margin-top: 20px;
       text-decoration: none;
-      background: #0078d4;
       color: white;
-      padding: 8px 16px;
+      background-color: #0078d4;
+      padding: 10px 15px;
       border-radius: 6px;
-      transition: 0.3s;
       font-weight: 500;
+      transition: background-color 0.2s ease;
     }
 
-    .volver:hover {
-      background: #005fa3;
+    a.volver:hover {
+      background-color: #005fa3;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <a href="index.html" class="volver">⬅ Volver al listado</a>
-    <h1 id="nombre"></h1>
-    <h2 id="ubicacion"></h2>
+  <header>
+    <img src="1762428248701.png" alt="Logo">
+    <h1>Control de Equipos HVAC</h1>
+  </header>
 
-    <div id="contenido"></div>
+  <div class="container" id="ficha">
+    <p>Cargando información...</p>
   </div>
 
   <script>
-    async function cargarFicha() {
+    async function loadFicha() {
       const params = new URLSearchParams(window.location.search);
       const id = params.get("id");
+      const src = params.get("src");
+      const ficha = document.getElementById("ficha");
 
-      const resp = await fetch("equipos.json?v=" + Date.now());
-      const data = await resp.json();
-      const eq = data[id];
+      try {
+        const response = await fetch(src);
+        const data = await response.json();
+        const eq = data[id];
 
-      if (!eq) {
-        document.querySelector(".container").innerHTML = "<p>Equipo no encontrado.</p>";
-        return;
+        if (!eq) {
+          ficha.innerHTML = "<p>No se encontró información para este equipo.</p>";
+          return;
+        }
+
+        ficha.innerHTML = `
+          <h2>${eq.name || id}</h2>
+          ${eq.ubicacion ? `<p><strong>Ubicación:</strong> ${eq.ubicacion}</p>` : ""}
+          ${eq.salida ? `<p><strong>Salida:</strong> ${eq.salida}</p>` : ""}
+          ${eq["Estado General"] ? `<p><strong>Estado General:</strong> ${eq["Estado General"]}</p>` : ""}
+          ${eq.Consumo ? `<p><strong>Consumo:</strong> ${eq.Consumo}</p>` : ""}
+          ${eq["Presión"] ? `<p><strong>Presión:</strong> ${eq["Presión"]}</p>` : ""}
+          ${eq["Compresor N°1"] ? `<p><strong>Compresor N°1:</strong> ${eq["Compresor N°1"]}</p>` : ""}
+          ${eq["Compresor N°2"] ? `<p><strong>Compresor N°2:</strong> ${eq["Compresor N°2"]}</p>` : ""}
+          ${eq["Circuito N°1"] ? `<p><strong>Circuito N°1:</strong> ${eq["Circuito N°1"]}</p>` : ""}
+          ${eq["Circuito N°2"] ? `<p><strong>Circuito N°2:</strong> ${eq["Circuito N°2"]}</p>` : ""}
+          ${eq.ultimo_servicio ? `<p><strong>Último servicio:</strong> ${eq.ultimo_servicio}</p>` : ""}
+          <a href="index.html" class="volver">⬅ Volver</a>
+        `;
+      } catch (error) {
+        ficha.innerHTML = "<p style='color:red;'>Error al cargar los datos.</p>";
+        console.error(error);
       }
-
-      document.getElementById("nombre").textContent = eq.name || id;
-      document.getElementById("ubicacion").textContent = eq.ubicacion ? `Ubicación: ${eq.ubicacion}` : "";
-
-      const cont = document.getElementById("contenido");
-
-      cont.innerHTML = `
-        <div class="section">
-          <h3>Estado General</h3>
-          <p>${eq["Estado General"] || "-"}</p>
-        </div>
-        <div class="section">
-          <h3>Consumo</h3>
-          <p>${eq["Consumo"] || "-"}</p>
-          <p><strong>Compresor N°1:</strong> ${eq["Compresor N°1"] || "-"}</p>
-          <p><strong>Compresor N°2:</strong> ${eq["Compresor N°2"] || "-"}</p>
-        </div>
-        <div class="section">
-          <h3>Presiones</h3>
-          <p><strong>Circuito N°1:</strong> ${eq["Circuito N°1"] || "-"}</p>
-          <p><strong>Circuito N°2:</strong> ${eq["Circuito N°2"] || "-"}</p>
-        </div>
-        <div class="section">
-          <h3>Último Servicio</h3>
-          <p>${eq["ultimo_servicio"] || "-"}</p>
-        </div>
-      `;
     }
 
-    cargarFicha();
+    loadFicha();
   </script>
 </body>
 </html>
