@@ -1,8 +1,8 @@
 {
   "Split 1": {
     "name": "Split 1",
-    "ubicacion": "Capex - Planta Baja",
-    "Estado General": "",
+    "modelo": "BGH 3000 FG 410",
+    "Estado General": "OK",
     "Consumo": "",
     "Presión": "",
     "ultimo_servicio": ""
