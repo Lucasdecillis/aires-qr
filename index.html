@@ -85,7 +85,7 @@
         const response = await fetch("equipos.json");
         const data = await response.json();
 
-        // Agrupar los equipos por "ubicacion" (por techo)
+        // Agrupar los equipos por "ubicacion"
         const techos = {};
         for (const [id, equipo] of Object.entries(data)) {
           const techo = equipo.ubicacion || "Sin ubicación";
@@ -96,7 +96,6 @@
         const container = document.getElementById("accordion");
         container.innerHTML = "";
 
-        // Crear un bloque por cada techo (ubicación)
         for (const [techo, equipos] of Object.entries(techos)) {
           const details = document.createElement("details");
           const summary = document.createElement("summary");
@@ -120,7 +119,7 @@
       } catch (error) {
         console.error("Error al cargar los equipos:", error);
         document.getElementById("accordion").innerHTML =
-          "<p>Error al cargar la lista de equipos.</p>";
+          "<p style='text-align:center;color:red;'>Error al cargar la lista de equipos.</p>";
       }
     }
 
