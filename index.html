@@ -3,79 +3,81 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Control de Equipos de Aire</title>
+  <title>Aires Acondicionados</title>
   <style>
     body {
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background: #f4f6f8;
+      background: #f4f7fa;
       margin: 0;
       padding: 20px;
       color: #222;
     }
+
     h1 {
       text-align: center;
       color: #005b96;
-    }
-    .tabs {
-      display: flex;
-      justify-content: center;
       margin-bottom: 20px;
     }
-    .tab {
-      padding: 10px 20px;
-      margin: 0 5px;
-      cursor: pointer;
-      border-radius: 8px;
-      background: #e0e6ed;
-      font-weight: 600;
-    }
-    .tab.active {
-      background: #005b96;
-      color: white;
-    }
-    .panel {
-      display: none;
-      max-width: 900px;
+
+    .accordion {
+      max-width: 800px;
       margin: 0 auto;
     }
-    .panel.active {
-      display: block;
-    }
-    .equipo {
+
+    details {
       background: white;
       border-radius: 10px;
-      padding: 15px;
-      margin-bottom: 10px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      transition: all 0.2s;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    summary {
+      padding: 15px 20px;
+      font-weight: bold;
+      font-size: 18px;
+      background: #005b96;
+      color: white;
       cursor: pointer;
+      user-select: none;
     }
-    .equipo:hover {
-      background: #f7fbff;
+
+    summary:hover {
+      background: #00457a;
     }
-    .header {
+
+    .equipo {
+      padding: 12px 20px;
+      border-top: 1px solid #eee;
       display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
+      flex-direction: column;
+      background: #fafafa;
     }
-    .header strong {
-      font-size: 17px;
-      color: #003366;
+
+    .equipo p {
+      margin: 4px 0;
+      font-size: 14px;
     }
-    .header span {
-      color: #555;
+
+    .equipo a {
+      margin-top: 8px;
+      text-decoration: none;
+      color: white;
+      background: #0073e6;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 14px;
+      width: fit-content;
+    }
+
+    .equipo a:hover {
+      background: #005bb5;
     }
   </style>
 </head>
 <body>
-  <h1>Control de Equipos de Aire Acondicionado</h1>
-  <div class="tabs">
-    <div class="tab active" data-tab="empresa1">Empresa 1</div>
-    <div class="tab" data-tab="empresa2">Empresa 2</div>
-  </div>
-
-  <div id="empresa1" class="panel active"></div>
-  <div id="empresa2" class="panel"></div>
+  <h1>Aires Acondicionados</h1>
+  <div class="accordion" id="accordion"></div>
 
   <script>
     async function cargarEquipos() {
@@ -83,56 +85,44 @@
         const response = await fetch("equipos.json");
         const data = await response.json();
 
-        // 🔸 Simulación: mitad de equipos para Empresa 1, mitad para Empresa 2
-        const keys = Object.keys(data);
-        const mitad = Math.ceil(keys.length / 2);
-        const empresa1Keys = keys.slice(0, mitad);
-        const empresa2Keys = keys.slice(mitad);
+        // Agrupar los equipos por "ubicacion" (por techo)
+        const techos = {};
+        for (const [id, equipo] of Object.entries(data)) {
+          const techo = equipo.ubicacion || "Sin ubicación";
+          if (!techos[techo]) techos[techo] = [];
+          techos[techo].push({ id, ...equipo });
+        }
 
-        renderEmpresa(document.getElementById("empresa1"), data, empresa1Keys);
-        renderEmpresa(document.getElementById("empresa2"), data, empresa2Keys);
-      } catch (err) {
-        console.error("Error al cargar equipos:", err);
+        const container = document.getElementById("accordion");
+        container.innerHTML = "";
+
+        // Crear un bloque por cada techo (ubicación)
+        for (const [techo, equipos] of Object.entries(techos)) {
+          const details = document.createElement("details");
+          const summary = document.createElement("summary");
+          summary.textContent = techo;
+          details.appendChild(summary);
+
+          equipos.forEach(eq => {
+            const div = document.createElement("div");
+            div.className = "equipo";
+            div.innerHTML = `
+              <p><strong>${eq.name}</strong></p>
+              <p>Salida: ${eq.salida || "-"}</p>
+              <p>Último servicio: ${eq.ultimo_servicio || "-"}</p>
+              <a href="ficha.html?equipo=${eq.id}">Ver más detalles</a>
+            `;
+            details.appendChild(div);
+          });
+
+          container.appendChild(details);
+        }
+      } catch (error) {
+        console.error("Error al cargar los equipos:", error);
+        document.getElementById("accordion").innerHTML =
+          "<p>Error al cargar la lista de equipos.</p>";
       }
     }
-
-    function renderEmpresa(container, data, claves) {
-      container.innerHTML = "";
-
-      claves.forEach((key) => {
-        const eq = data[key];
-        const equipoDiv = document.createElement("div");
-        equipoDiv.className = "equipo";
-
-        equipoDiv.innerHTML = `
-          <div class="header">
-            <strong>${eq.name || key}</strong>
-            <span>${eq.ubicacion || "Ubicación no definida"}</span>
-          </div>
-          <div class="header">
-            <span>Salida: ${eq.salida || "-"}</span>
-            <span>Último servicio: ${eq.ultimo_servicio || "-"}</span>
-          </div>
-        `;
-
-        // 👉 Al hacer clic, ir a ficha.html
-        equipoDiv.addEventListener("click", () => {
-          window.location.href = `ficha.html?equipo=${encodeURIComponent(key)}`;
-        });
-
-        container.appendChild(equipoDiv);
-      });
-    }
-
-    // Tabs
-    document.querySelectorAll(".tab").forEach((tab) => {
-      tab.addEventListener("click", () => {
-        document.querySelectorAll(".tab").forEach((t) => t.classList.remove("active"));
-        document.querySelectorAll(".panel").forEach((p) => p.classList.remove("active"));
-        tab.classList.add("active");
-        document.getElementById(tab.dataset.tab).classList.add("active");
-      });
-    });
 
     cargarEquipos();
   </script>
