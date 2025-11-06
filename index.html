@@ -3,31 +3,53 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Aires Acondicionados</title>
+  <title>Control de Equipos HVAC</title>
   <style>
     body {
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       background: #f4f7fa;
       margin: 0;
-      padding: 20px;
+      padding: 0;
       color: #222;
     }
 
-    h1 {
+    header {
+      background: #0073e6;
+      color: white;
       text-align: center;
-      color: #005b96;
-      margin-bottom: 20px;
+      padding: 20px;
     }
 
-    .accordion {
-      max-width: 800px;
-      margin: 0 auto;
+    header img {
+      height: 60px;
+      display: block;
+      margin: 0 auto 10px;
+    }
+
+    h1 {
+      font-size: 20px;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 0 15px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 20px;
     }
 
     details {
       background: white;
       border-radius: 10px;
-      margin-bottom: 12px;
+      margin-bottom: 15px;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
       overflow: hidden;
     }
@@ -42,10 +64,6 @@
       user-select: none;
     }
 
-    summary:hover {
-      background: #00457a;
-    }
-
     .equipo {
       padding: 12px 20px;
       border-top: 1px solid #eee;
@@ -55,8 +73,12 @@
     }
 
     .equipo p {
-      margin: 4px 0;
+      margin: 3px 0;
       font-size: 14px;
+    }
+
+    .equipo strong {
+      color: #00457a;
     }
 
     .equipo a {
@@ -76,8 +98,15 @@
   </style>
 </head>
 <body>
-  <h1>Aires Acondicionados</h1>
-  <div class="accordion" id="accordion"></div>
+  <header>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Logo_BCN.svg/512px-Logo_BCN.svg.png" alt="BCN" />
+    <h1>Control de Equipos HVAC</h1>
+  </header>
+
+  <div class="container">
+    <input type="text" id="buscador" placeholder="Buscar equipo..." />
+    <div id="accordion"></div>
+  </div>
 
   <script>
     async function cargarEquipos() {
@@ -85,37 +114,49 @@
         const response = await fetch("equipos.json");
         const data = await response.json();
 
-        // Agrupar los equipos por "ubicacion"
-        const techos = {};
-        for (const [id, equipo] of Object.entries(data)) {
-          const techo = equipo.ubicacion || "Sin ubicación";
-          if (!techos[techo]) techos[techo] = [];
-          techos[techo].push({ id, ...equipo });
-        }
+        // Crear grupos: Terrazas (RT) y Capex (CX, por ejemplo)
+        const terrazas = Object.entries(data).filter(([id]) => id.startsWith("RT"));
+        const capex = Object.entries(data).filter(([id]) => id.startsWith("CX"));
+
+        const grupos = [
+          { nombre: "Terrazas", lista: terrazas },
+          { nombre: "Capex", lista: capex }
+        ];
 
         const container = document.getElementById("accordion");
         container.innerHTML = "";
 
-        for (const [techo, equipos] of Object.entries(techos)) {
+        grupos.forEach(grupo => {
           const details = document.createElement("details");
           const summary = document.createElement("summary");
-          summary.textContent = techo;
+          summary.textContent = grupo.nombre;
           details.appendChild(summary);
 
-          equipos.forEach(eq => {
+          grupo.lista.forEach(([id, eq]) => {
             const div = document.createElement("div");
             div.className = "equipo";
             div.innerHTML = `
               <p><strong>${eq.name}</strong></p>
+              <p>Techo: ${eq.ubicacion || "-"}</p>
               <p>Salida: ${eq.salida || "-"}</p>
+              <p>Estado General: ${eq["Estado General"] || "-"}</p>
               <p>Último servicio: ${eq.ultimo_servicio || "-"}</p>
-              <a href="ficha.html?equipo=${eq.id}">Ver más detalles</a>
+              <a href="ficha.html?equipo=${id}">Ver ficha</a>
             `;
             details.appendChild(div);
           });
 
           container.appendChild(details);
-        }
+        });
+
+        // Buscador
+        document.getElementById("buscador").addEventListener("input", (e) => {
+          const valor = e.target.value.toLowerCase();
+          document.querySelectorAll(".equipo").forEach(eq => {
+            eq.style.display = eq.textContent.toLowerCase().includes(valor) ? "" : "none";
+          });
+        });
+
       } catch (error) {
         console.error("Error al cargar los equipos:", error);
         document.getElementById("accordion").innerHTML =
