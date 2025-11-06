@@ -169,5 +169,19 @@
     "Circuito N°1": "",
     "Circuito N°2": "",
     "ultimo_servicio": ""
+ },
+  "RT-14": {
+    "name": "Rooftop 14",
+    "ubicacion": "Techo 2",
+    "salida": "",
+    "Estado General": "",
+    "Consumo": "",
+    "Compresor N°1": "",
+    "Compresor N°2": "",
+    "Presión": "",
+    "Circuito N°1": "",
+    "Circuito N°2": "",
+    "ultimo_servicio": ""
   }
+}
 }
