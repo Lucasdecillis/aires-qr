@@ -12,7 +12,6 @@
       padding: 0;
       color: #222;
     }
-
     .container {
       max-width: 800px;
       margin: 40px auto;
@@ -21,20 +20,17 @@
       border-radius: 14px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
-
     h1 {
       text-align: center;
       color: #005b96;
       margin-bottom: 10px;
     }
-
     h2 {
       text-align: center;
       color: #444;
       margin-top: 0;
       font-weight: 500;
     }
-
     .info p {
       background: #f2f4f7;
       padding: 10px 15px;
@@ -44,42 +40,9 @@
       justify-content: space-between;
       font-size: 15px;
     }
-
     .info strong {
       color: #003366;
       font-weight: 600;
-    }
-
-    /* Estilo para los grupos (Consumo / Presión) */
-    .group {
-      background: #eef3f8;
-      border-radius: 10px;
-      padding: 12px 15px;
-      margin-top: 15px;
-    }
-
-    .group p {
-      background: none;
-      margin: 4px 0;
-      padding: 0;
-      font-size: 14px;
-    }
-
-    .group > p:first-child {
-      font-size: 16px;
-      font-weight: bold;
-      color: #003366;
-      margin-bottom: 6px;
-    }
-
-    .group .subitem {
-      margin-left: 15px;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .group .subitem strong {
-      color: #005b96;
     }
   </style>
 </head>
@@ -99,6 +62,7 @@
         const response = await fetch("equipos.json");
         const data = await response.json();
 
+        // Buscar sin importar mayúsculas/minúsculas
         const equipoKey = Object.keys(data).find(
           k => k.toLowerCase() === equipoIdParam.toLowerCase()
         );
@@ -106,6 +70,7 @@
 
         if (!equipo) {
           document.getElementById("name").textContent = "Equipo no encontrado";
+          document.getElementById("ubicacion").textContent = "";
           document.getElementById("info").innerHTML =
             "<p>No se encontró información para este equipo.</p>";
           return;
@@ -118,38 +83,8 @@
         infoDiv.innerHTML = "";
 
         const exclude = ["name", "ubicacion"];
-        const grouped = {
-          Consumo: ["Compresor N°1", "Compresor N°2"],
-          Presión: [
-            "Succión Circuito N°1",
-            "Descarga Circuito N°1",
-            "Succión Circuito N°2",
-            "Descarga Circuito N°2"
-          ]
-        };
-
         for (const [key, value] of Object.entries(equipo)) {
-          if (exclude.includes(key)) continue;
-
-          // Si es un grupo principal (Consumo o Presión)
-          if (grouped[key]) {
-            const group = document.createElement("div");
-            group.className = "group";
-            group.innerHTML = `<p>${key}</p>`;
-
-            grouped[key].forEach(subKey => {
-              if (equipo[subKey]) {
-                const subItem = document.createElement("p");
-                subItem.className = "subitem";
-                subItem.innerHTML = `<strong>${subKey}:</strong> <span>${equipo[subKey]}</span>`;
-                group.appendChild(subItem);
-              }
-            });
-
-            infoDiv.appendChild(group);
-          }
-          // Si no pertenece a un grupo, mostrarlo normal
-          else if (!Object.values(grouped).flat().includes(key)) {
+          if (!exclude.includes(key)) {
             const item = document.createElement("p");
             item.innerHTML = `<strong>${key}:</strong> <span>${value || "-"}</span>`;
             infoDiv.appendChild(item);
