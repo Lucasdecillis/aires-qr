@@ -7,28 +7,29 @@
   <style>
     body {
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background: #f4f7fa;
+      background: #f6f8fa;
       margin: 0;
       padding: 0;
       color: #222;
     }
 
     header {
-      background: #0073e6;
+      background: #0071c5;
       color: white;
       text-align: center;
-      padding: 20px;
+      padding: 25px 15px;
     }
 
     header img {
-      height: 60px;
+      max-width: 130px;
       display: block;
       margin: 0 auto 10px;
     }
 
-    h1 {
-      font-size: 20px;
+    header h1 {
       margin: 0;
+      font-size: 1.6rem;
+      font-weight: 700;
     }
 
     .container {
@@ -37,39 +38,54 @@
       padding: 0 15px;
     }
 
-    input {
-      width: 100%;
-      padding: 10px;
-      font-size: 16px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      margin-bottom: 20px;
-    }
-
-    details {
+    .section {
       background: white;
-      border-radius: 10px;
       margin-bottom: 15px;
+      border-radius: 12px;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
       overflow: hidden;
     }
 
-    summary {
-      padding: 15px 20px;
-      font-weight: bold;
-      font-size: 18px;
+    .section-header {
       background: #005b96;
       color: white;
+      padding: 12px 20px;
+      font-weight: bold;
+      font-size: 1.1rem;
       cursor: pointer;
-      user-select: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .section-header:hover {
+      background: #004a7c;
+    }
+
+    .arrow {
+      transition: transform 0.3s ease;
+    }
+
+    .arrow.open {
+      transform: rotate(180deg);
+    }
+
+    .section-content {
+      display: none;
+      padding: 15px 20px;
     }
 
     .equipo {
-      padding: 12px 20px;
-      border-top: 1px solid #eee;
-      display: flex;
-      flex-direction: column;
-      background: #fafafa;
+      background: #f3f6f9;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .equipo h3 {
+      margin: 0 0 8px;
+      color: #005b96;
     }
 
     .equipo p {
@@ -77,35 +93,54 @@
       font-size: 14px;
     }
 
-    .equipo strong {
-      color: #00457a;
-    }
-
-    .equipo a {
-      margin-top: 8px;
-      text-decoration: none;
+    .btn {
+      display: inline-block;
+      margin-top: 10px;
+      background: #0071c5;
       color: white;
-      background: #0073e6;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 14px;
-      width: fit-content;
+      padding: 8px 15px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
     }
 
-    .equipo a:hover {
-      background: #005bb5;
+    .btn:hover {
+      background: #005b96;
+    }
+
+    .search-box {
+      display: block;
+      width: 100%;
+      max-width: 400px;
+      margin: 15px auto;
+      padding: 10px 15px;
+      font-size: 15px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      outline: none;
+    }
+
+    .search-box:focus {
+      border-color: #0071c5;
     }
   </style>
 </head>
 <body>
   <header>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Logo_BCN.svg/512px-Logo_BCN.svg.png" alt="BCN" />
+    <img src="logo.png" alt="Logo BCN" />
     <h1>Control de Equipos HVAC</h1>
   </header>
 
   <div class="container">
-    <input type="text" id="buscador" placeholder="Buscar equipo..." />
-    <div id="accordion"></div>
+    <input type="text" id="search" class="search-box" placeholder="Buscar equipo...">
+
+    <div class="section">
+      <div class="section-header" onclick="toggleSection(this)">
+        Terrazas
+        <span class="arrow">▼</span>
+      </div>
+      <div class="section-content" id="equipos-list"></div>
+    </div>
   </div>
 
   <script>
@@ -113,55 +148,43 @@
       try {
         const response = await fetch("equipos.json");
         const data = await response.json();
+        const listContainer = document.getElementById("equipos-list");
+        listContainer.innerHTML = "";
 
-        // Crear grupos: Terrazas (RT) y Capex (CX, por ejemplo)
-        const terrazas = Object.entries(data).filter(([id]) => id.startsWith("RT"));
-        const capex = Object.entries(data).filter(([id]) => id.startsWith("CX"));
-
-        const grupos = [
-          { nombre: "Terrazas", lista: terrazas },
-          { nombre: "Capex", lista: capex }
-        ];
-
-        const container = document.getElementById("accordion");
-        container.innerHTML = "";
-
-        grupos.forEach(grupo => {
-          const details = document.createElement("details");
-          const summary = document.createElement("summary");
-          summary.textContent = grupo.nombre;
-          details.appendChild(summary);
-
-          grupo.lista.forEach(([id, eq]) => {
-            const div = document.createElement("div");
-            div.className = "equipo";
-            div.innerHTML = `
-              <p><strong>${eq.name}</strong></p>
-              <p>Techo: ${eq.ubicacion || "-"}</p>
-              <p>Salida: ${eq.salida || "-"}</p>
-              <p>Estado General: ${eq["Estado General"] || "-"}</p>
-              <p>Último servicio: ${eq.ultimo_servicio || "-"}</p>
-              <a href="ficha.html?equipo=${id}">Ver ficha</a>
-            `;
-            details.appendChild(div);
-          });
-
-          container.appendChild(details);
+        // Mostrar Rooftops 1–19
+        Object.entries(data).forEach(([id, equipo]) => {
+          const card = document.createElement("div");
+          card.classList.add("equipo");
+          card.innerHTML = `
+            <h3>${equipo.name}</h3>
+            <p><strong>Techo:</strong> ${equipo.ubicacion || "-"}</p>
+            <p><strong>Salida:</strong> ${equipo.salida || "-"}</p>
+            <p><strong>Estado General:</strong> ${equipo["Estado General"] || "-"}</p>
+            <p><strong>Último Servicio:</strong> ${equipo.ultimo_servicio || "-"}</p>
+            <a class="btn" href="ficha.html?equipo=${id}">Ver ficha</a>
+          `;
+          listContainer.appendChild(card);
         });
 
-        // Buscador
-        document.getElementById("buscador").addEventListener("input", (e) => {
-          const valor = e.target.value.toLowerCase();
-          document.querySelectorAll(".equipo").forEach(eq => {
-            eq.style.display = eq.textContent.toLowerCase().includes(valor) ? "" : "none";
+        // Filtro de búsqueda
+        document.getElementById("search").addEventListener("input", (e) => {
+          const term = e.target.value.toLowerCase();
+          document.querySelectorAll(".equipo").forEach(card => {
+            card.style.display = card.innerText.toLowerCase().includes(term) ? "" : "none";
           });
         });
 
       } catch (error) {
-        console.error("Error al cargar los equipos:", error);
-        document.getElementById("accordion").innerHTML =
-          "<p style='text-align:center;color:red;'>Error al cargar la lista de equipos.</p>";
+        console.error("Error al cargar el listado de equipos:", error);
+        document.getElementById("equipos-list").innerHTML = "<p>Error al cargar los equipos.</p>";
       }
+    }
+
+    function toggleSection(header) {
+      const arrow = header.querySelector(".arrow");
+      arrow.classList.toggle("open");
+      const content = header.nextElementSibling;
+      content.style.display = content.style.display === "block" ? "none" : "block";
     }
 
     cargarEquipos();
