@@ -56,27 +56,20 @@
   <script>
     async function cargarDatos() {
       const params = new URLSearchParams(window.location.search);
-      const equipoIdParam = (params.get("equipo") || "").trim();
+      const equipoId = params.get("equipo");
 
       try {
         const response = await fetch("equipos.json");
         const data = await response.json();
-
-        // Buscar sin importar mayúsculas/minúsculas
-        const equipoKey = Object.keys(data).find(
-          k => k.toLowerCase() === equipoIdParam.toLowerCase()
-        );
-        const equipo = equipoKey ? data[equipoKey] : null;
+        const equipo = data[equipoId];
 
         if (!equipo) {
-          document.getElementById("name").textContent = "Equipo no encontrado";
-          document.getElementById("ubicacion").textContent = "";
           document.getElementById("info").innerHTML =
             "<p>No se encontró información para este equipo.</p>";
           return;
         }
 
-        document.getElementById("name").textContent = equipo.name || equipoKey;
+        document.getElementById("name").textContent = equipo.name || "";
         document.getElementById("ubicacion").textContent = equipo.ubicacion || "";
 
         const infoDiv = document.getElementById("info");
@@ -92,8 +85,6 @@
         }
       } catch (error) {
         console.error("Error al cargar los datos:", error);
-        document.getElementById("info").innerHTML =
-          "<p>Error al cargar los datos del archivo.</p>";
       }
     }
 
