@@ -1,94 +1,325 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ficha del Equipo</title>
-  <style>
-    body {
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background: #f6f8fa;
-      margin: 0;
-      padding: 0;
-      color: #222;
+{
+  "RT-01": {
+    "name": "Rooftop 01",
+    "ubicacion": "Techo 1",
+    "salida": "PB PUMA",
+    "Estado General": "OK",
+    "ultimo_servicio": "2025-10-01",
+    "Consumo": {
+      "Compresor N°1": "",
+      "Compresor N°2": ""
+    },
+    "Presión": {
+      "Succión Circuito N°1": "",
+      "Descarga Circuito N°1": "",
+      "Succión Circuito N°2": "",
+      "Descarga Circuito N°2": ""
     }
-    .container {
-      max-width: 800px;
-      margin: 40px auto;
-      background: white;
-      padding: 30px;
-      border-radius: 14px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  },
+  "RT-02": {
+    "name": "Rooftop 02",
+    "ubicacion": "Techo 2",
+    "salida": "",
+    "Estado General": "",
+    "ultimo_servicio": "",
+    "Consumo": {
+      "Compresor N°1": "",
+      "Compresor N°2": ""
+    },
+    "Presión": {
+      "Succión Circuito N°1": "",
+      "Descarga Circuito N°1": "",
+      "Succión Circuito N°2": "",
+      "Descarga Circuito N°2": ""
     }
-    h1 {
-      text-align: center;
-      color: #005b96;
-      margin-bottom: 10px;
+  },
+  "RT-03": {
+    "name": "Rooftop 03",
+    "ubicacion": "Techo 3",
+    "salida": "",
+    "Estado General": "",
+    "ultimo_servicio": "",
+    "Consumo": {
+      "Compresor N°1": "",
+      "Compresor N°2": ""
+    },
+    "Presión": {
+      "Succión Circuito N°1": "",
+      "Descarga Circuito N°1": "",
+      "Succión Circuito N°2": "",
+      "Descarga Circuito N°2": ""
     }
-    h2 {
-      text-align: center;
-      color: #444;
-      margin-top: 0;
-      font-weight: 500;
+  },
+  "RT-04": {
+    "name": "Rooftop 04",
+    "ubicacion": "Techo 4",
+    "salida": "",
+    "Estado General": "",
+    "ultimo_servicio": "",
+    "Consumo": {
+      "Compresor N°1": "",
+      "Compresor N°2": ""
+    },
+    "Presión": {
+      "Succión Circuito N°1": "",
+      "Descarga Circuito N°1": "",
+      "Succión Circuito N°2": "",
+      "Descarga Circuito N°2": ""
     }
-    .info p {
-      background: #f2f4f7;
-      padding: 10px 15px;
-      border-radius: 8px;
-      margin: 8px 0;
-      display: flex;
-      justify-content: space-between;
-      font-size: 15px;
+  },
+  "RT-05": {
+    "name": "Rooftop 05",
+    "ubicacion": "Techo 5",
+    "salida": "",
+    "Estado General": "",
+    "ultimo_servicio": "",
+    "Consumo": {
+      "Compresor N°1": "",
+      "Compresor N°2": ""
+    },
+    "Presión": {
+      "Succión Circuito N°1": "",
+      "Descarga Circuito N°1": "",
+      "Succión Circuito N°2": "",
+      "Descarga Circuito N°2": ""
     }
-    .info strong {
-      color: #003366;
-      font-weight: 600;
+  },
+  "RT-06": {
+    "name": "Rooftop 06",
+    "ubicacion": "Techo 6",
+    "salida": "",
+    "Estado General": "",
+    "ultimo_servicio": "",
+    "Consumo": {
+      "Compresor N°1": "",
+      "Compresor N°2": ""
+    },
+    "Presión": {
+      "Succión Circuito N°1": "",
+      "Descarga Circuito N°1": "",
+      "Succión Circuito N°2": "",
+      "Descarga Circuito N°2": ""
     }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1 id="name"></h1>
-    <h2 id="ubicacion"></h2>
-    <div class="info" id="info"></div>
-  </div>
-
-  <script>
-    async function cargarDatos() {
-      const params = new URLSearchParams(window.location.search);
-      const equipoId = params.get("equipo");
-
-      try {
-        const response = await fetch("equipos.json");
-        const data = await response.json();
-        const equipo = data[equipoId];
-
-        if (!equipo) {
-          document.getElementById("info").innerHTML =
-            "<p>No se encontró información para este equipo.</p>";
-          return;
-        }
-
-        document.getElementById("name").textContent = equipo.name || "";
-        document.getElementById("ubicacion").textContent = equipo.ubicacion || "";
-
-        const infoDiv = document.getElementById("info");
-        infoDiv.innerHTML = "";
-
-        const exclude = ["name", "ubicacion"];
-        for (const [key, value] of Object.entries(equipo)) {
-          if (!exclude.includes(key)) {
-            const item = document.createElement("p");
-            item.innerHTML = `<strong>${key}:</strong> <span>${value || "-"}</span>`;
-            infoDiv.appendChild(item);
-          }
-        }
-      } catch (error) {
-        console.error("Error al cargar los datos:", error);
-      }
+  },
+  "RT-07": {
+    "name": "Rooftop 07",
+    "ubicacion": "Techo 7",
+    "salida": "",
+    "Estado General": "",
+    "ultimo_servicio": "",
+    "Consumo": {
+      "Compresor N°1": "",
+      "Compresor N°2": ""
+    },
+    "Presión": {
+      "Succión Circuito N°1": "",
+      "Descarga Circuito N°1": "",
+      "Succión Circuito N°2": "",
+      "Descarga Circuito N°2": ""
     }
-
-    cargarDatos();
-  </script>
-</body>
-</html>
+  },
+  "RT-08": {
+    "name": "Rooftop 08",
+    "ubicacion": "Techo 8",
+    "salida": "",
+    "Estado General": "",
+    "ultimo_servicio": "",
+    "Consumo": {
+      "Compresor N°1": "",
+      "Compresor N°2": ""
+    },
+    "Presión": {
+      "Succión Circuito N°1": "",
+      "Descarga Circuito N°1": "",
+      "Succión Circuito N°2": "",
+      "Descarga Circuito N°2": ""
+    }
+  },
+  "RT-09": {
+    "name": "Rooftop 09",
+    "ubicacion": "Techo 9",
+    "salida": "",
+    "Estado General": "",
+    "ultimo_servicio": "",
+    "Consumo": {
+      "Compresor N°1": "",
+      "Compresor N°2": ""
+    },
+    "Presión": {
+      "Succión Circuito N°1": "",
+      "Descarga Circuito N°1": "",
+      "Succión Circuito N°2": "",
+      "Descarga Circuito N°2": ""
+    }
+  },
+  "RT-10": {
+    "name": "Rooftop 10",
+    "ubicacion": "Techo 10",
+    "salida": "",
+    "Estado General": "",
+    "ultimo_servicio": "",
+    "Consumo": {
+      "Compresor N°1": "",
+      "Compresor N°2": ""
+    },
+    "Presión": {
+      "Succión Circuito N°1": "",
+      "Descarga Circuito N°1": "",
+      "Succión Circuito N°2": "",
+      "Descarga Circuito N°2": ""
+    }
+  },
+  "RT-11": {
+    "name": "Rooftop 11",
+    "ubicacion": "Techo 11",
+    "salida": "",
+    "Estado General": "",
+    "ultimo_servicio": "",
+    "Consumo": {
+      "Compresor N°1": "",
+      "Compresor N°2": ""
+    },
+    "Presión": {
+      "Succión Circuito N°1": "",
+      "Descarga Circuito N°1": "",
+      "Succión Circuito N°2": "",
+      "Descarga Circuito N°2": ""
+    }
+  },
+  "RT-12": {
+    "name": "Rooftop 12",
+    "ubicacion": "Techo 12",
+    "salida": "",
+    "Estado General": "",
+    "ultimo_servicio": "",
+    "Consumo": {
+      "Compresor N°1": "",
+      "Compresor N°2": ""
+    },
+    "Presión": {
+      "Succión Circuito N°1": "",
+      "Descarga Circuito N°1": "",
+      "Succión Circuito N°2": "",
+      "Descarga Circuito N°2": ""
+    }
+  },
+  "RT-13": {
+    "name": "Rooftop 13",
+    "ubicacion": "Techo 13",
+    "salida": "",
+    "Estado General": "",
+    "ultimo_servicio": "",
+    "Consumo": {
+      "Compresor N°1": "",
+      "Compresor N°2": ""
+    },
+    "Presión": {
+      "Succión Circuito N°1": "",
+      "Descarga Circuito N°1": "",
+      "Succión Circuito N°2": "",
+      "Descarga Circuito N°2": ""
+    }
+  },
+  "RT-14": {
+    "name": "Rooftop 14",
+    "ubicacion": "Techo 14",
+    "salida": "",
+    "Estado General": "",
+    "ultimo_servicio": "",
+    "Consumo": {
+      "Compresor N°1": "",
+      "Compresor N°2": ""
+    },
+    "Presión": {
+      "Succión Circuito N°1": "",
+      "Descarga Circuito N°1": "",
+      "Succión Circuito N°2": "",
+      "Descarga Circuito N°2": ""
+    }
+  },
+  "RT-15": {
+    "name": "Rooftop 15",
+    "ubicacion": "Techo 15",
+    "salida": "",
+    "Estado General": "",
+    "ultimo_servicio": "",
+    "Consumo": {
+      "Compresor N°1": "",
+      "Compresor N°2": ""
+    },
+    "Presión": {
+      "Succión Circuito N°1": "",
+      "Descarga Circuito N°1": "",
+      "Succión Circuito N°2": "",
+      "Descarga Circuito N°2": ""
+    }
+  },
+  "RT-16": {
+    "name": "Rooftop 16",
+    "ubicacion": "Techo 16",
+    "salida": "",
+    "Estado General": "",
+    "ultimo_servicio": "",
+    "Consumo": {
+      "Compresor N°1": "",
+      "Compresor N°2": ""
+    },
+    "Presión": {
+      "Succión Circuito N°1": "",
+      "Descarga Circuito N°1": "",
+      "Succión Circuito N°2": "",
+      "Descarga Circuito N°2": ""
+    }
+  },
+  "RT-17": {
+    "name": "Rooftop 17",
+    "ubicacion": "Techo 17",
+    "salida": "",
+    "Estado General": "",
+    "ultimo_servicio": "",
+    "Consumo": {
+      "Compresor N°1": "",
+      "Compresor N°2": ""
+    },
+    "Presión": {
+      "Succión Circuito N°1": "",
+      "Descarga Circuito N°1": "",
+      "Succión Circuito N°2": "",
+      "Descarga Circuito N°2": ""
+    }
+  },
+  "RT-18": {
+    "name": "Rooftop 18",
+    "ubicacion": "Techo 18",
+    "salida": "",
+    "Estado General": "",
+    "ultimo_servicio": "",
+    "Consumo": {
+      "Compresor N°1": "",
+      "Compresor N°2": ""
+    },
+    "Presión": {
+      "Succión Circuito N°1": "",
+      "Descarga Circuito N°1": "",
+      "Succión Circuito N°2": "",
+      "Descarga Circuito N°2": ""
+    }
+  },
+  "RT-19": {
+    "name": "Rooftop 19",
+    "ubicacion": "Techo 19",
+    "salida": "",
+    "Estado General": "",
+    "ultimo_servicio": "",
+    "Consumo": {
+      "Compresor N°1": "",
+      "Compresor N°2": ""
+    },
+    "Presión": {
+      "Succión Circuito N°1": "",
+      "Descarga Circuito N°1": "",
+      "Succión Circuito N°2": "",
+      "Descarga Circuito N°2": ""
+    }
+  }
+}
