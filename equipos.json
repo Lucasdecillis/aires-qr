@@ -130,5 +130,44 @@
     "Circuito N°1": "",
     "Circuito N°2": "",
     "ultimo_servicio": ""
+  },
+  "RT-11": {
+    "name": "Rooftop 11",
+    "ubicacion": "Techo 2",
+    "salida": "",
+    "Estado General": "",
+    "Consumo": "",
+    "Compresor N°1": "",
+    "Compresor N°2": "",
+    "Presión": "",
+    "Circuito N°1": "",
+    "Circuito N°2": "",
+    "ultimo_servicio": ""
+  },
+  "RT-12": {
+    "name": "Rooftop 12",
+    "ubicacion": "Techo 2",
+    "salida": "",
+    "Estado General": "",
+    "Consumo": "",
+    "Compresor N°1": "",
+    "Compresor N°2": "",
+    "Presión": "",
+    "Circuito N°1": "",
+    "Circuito N°2": "",
+    "ultimo_servicio": ""
+  },
+  "RT-13": {
+    "name": "Rooftop 13",
+    "ubicacion": "Techo 2",
+    "salida": "",
+    "Estado General": "",
+    "Consumo": "",
+    "Compresor N°1": "",
+    "Compresor N°2": "",
+    "Presión": "",
+    "Circuito N°1": "",
+    "Circuito N°2": "",
+    "ultimo_servicio": ""
   }
 }
