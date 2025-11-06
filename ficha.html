@@ -44,22 +44,6 @@
       color: #003366;
       font-weight: 600;
     }
-    .back {
-      display: block;
-      margin-top: 20px;
-      text-align: center;
-    }
-    .back a {
-      text-decoration: none;
-      color: white;
-      background: #005b96;
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-weight: bold;
-    }
-    .back a:hover {
-      background: #00457a;
-    }
   </style>
 </head>
 <body>
@@ -67,35 +51,33 @@
     <h1 id="name"></h1>
     <h2 id="ubicacion"></h2>
     <div class="info" id="info"></div>
-    <div class="back">
-      <a href="index.html">← Volver al listado</a>
-    </div>
   </div>
 
   <script>
     async function cargarDatos() {
       const params = new URLSearchParams(window.location.search);
-      const equipoId = params.get("equipo");
+      const equipoIdParam = (params.get("equipo") || "").trim();
 
       try {
         const response = await fetch("equipos.json");
         const data = await response.json();
 
-        // Ignorar mayúsculas o minúsculas en el ID
+        // Buscar sin importar mayúsculas/minúsculas
         const equipoKey = Object.keys(data).find(
-          k => k.toLowerCase() === (equipoId || "").toLowerCase()
+          k => k.toLowerCase() === equipoIdParam.toLowerCase()
         );
         const equipo = equipoKey ? data[equipoKey] : null;
 
         if (!equipo) {
+          document.getElementById("name").textContent = "Equipo no encontrado";
+          document.getElementById("ubicacion").textContent = "";
           document.getElementById("info").innerHTML =
             "<p>No se encontró información para este equipo.</p>";
           return;
         }
 
         document.getElementById("name").textContent = equipo.name || equipoKey;
-        document.getElementById("ubicacion").textContent =
-          equipo.ubicacion || "";
+        document.getElementById("ubicacion").textContent = equipo.ubicacion || "";
 
         const infoDiv = document.getElementById("info");
         infoDiv.innerHTML = "";
@@ -110,6 +92,8 @@
         }
       } catch (error) {
         console.error("Error al cargar los datos:", error);
+        document.getElementById("info").innerHTML =
+          "<p>Error al cargar los datos del archivo.</p>";
       }
     }
 
