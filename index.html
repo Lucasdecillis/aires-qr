@@ -15,287 +15,134 @@
 
     header {
       display: flex;
-      flex-direction: row;
       align-items: center;
       justify-content: center;
       background-color: #0078d4;
       color: white;
       padding: 16px 20px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      flex-wrap: wrap;
-      text-align: center;
+      position: relative;
     }
 
     header img {
-      height: 70px;
+      position: absolute;
+      left: 20px;
+      height: 65px;
       width: auto;
       border-radius: 10px;
-      margin-right: 15px;
     }
 
-    h1 {
-      font-size: 1.8em;
+    header h1 {
+      font-size: 1.6em;
       margin: 0;
     }
 
-    @media (max-width: 600px) {
-      header {
-        flex-direction: column;
-        gap: 10px;
-      }
-      header img {
-        margin: 0;
-        height: 80px;
-      }
-      h1 {
-        font-size: 1.5em;
-      }
-    }
-
-    main {
-      max-width: 900px;
-      margin: 20px auto;
-      padding: 0 15px;
-    }
-
-    .accordion {
-      background: white;
-      border-radius: 10px;
-      margin-bottom: 15px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-    }
-
-    .accordion-header {
-      background-color: #0078d4;
-      color: white;
-      padding: 15px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 1.1em;
+    .tabs {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-radius: 10px 10px 0 0;
-      user-select: none;
+      justify-content: center;
+      margin: 20px 0;
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
-    .accordion-header:hover {
-      background-color: #005ea6;
-    }
-
-    .accordion-content {
-      display: none;
-      padding: 15px;
-      animation: fadeIn 0.3s ease;
-    }
-
-    .accordion.active .accordion-content {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-5px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .btn-zone {
-      display: inline-block;
-      padding: 10px 15px;
-      margin: 5px;
-      background-color: #e9f3ff;
-      color: #0078d4;
-      border: 1px solid #0078d4;
-      border-radius: 6px;
-      font-weight: 600;
+    .tab {
+      background-color: #e0e7ff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 25px;
+      font-size: 1em;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.2s ease-in-out;
     }
 
-    .btn-zone.active,
-    .btn-zone:hover {
+    .tab.active {
       background-color: #0078d4;
       color: white;
     }
 
-    .grid {
+    .container {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 15px;
-      margin-top: 10px;
+      padding: 0 20px 30px;
     }
 
     .card {
-      background-color: #ffffff;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       padding: 15px;
-      transition: transform 0.2s;
+      transition: transform 0.2s ease;
     }
 
     .card:hover {
-      transform: scale(1.02);
+      transform: translateY(-3px);
     }
 
-    .card h3 {
-      margin-top: 0;
+    .card h2 {
       color: #0078d4;
+      margin: 0 0 8px 0;
     }
 
-    .btn {
-      display: inline-block;
-      padding: 8px 12px;
-      background-color: #0078d4;
-      color: white;
+    .card p {
+      margin: 4px 0;
+      font-size: 0.95em;
+    }
+
+    .card a {
       text-decoration: none;
-      border-radius: 6px;
-      font-size: 0.9em;
-      transition: background-color 0.2s;
-    }
-
-    .btn:hover {
-      background-color: #005ea6;
-    }
-
-    .search-box {
-      margin: 20px 0;
-      text-align: center;
-    }
-
-    .search-box input {
-      padding: 10px;
-      width: 80%;
-      max-width: 400px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
+      color: inherit;
     }
   </style>
 </head>
-
 <body>
   <header>
-    <img src="1762428248701.png" alt="Logo" />
+    <img src="1762428248701.png" alt="Logo">
     <h1>Control de Equipos HVAC</h1>
   </header>
 
-  <main>
-    <div class="search-box">
-      <input type="text" id="search" placeholder="Buscar equipo..." oninput="filtrarEquipos()">
-    </div>
+  <div class="tabs">
+    <button class="tab active" onclick="loadEquipos('equipos.json', this)">Terrazas</button>
+    <button class="tab" onclick="loadEquipos('split.json', this)">Capex</button>
+  </div>
 
-    <!-- Pestaña Terrazas -->
-    <div class="accordion active">
-      <div class="accordion-header" onclick="toggleAccordion(this)">
-        Terrazas <span>▼</span>
-      </div>
-      <div class="accordion-content" id="equipos-terrazas">
-        <div id="zonas" style="text-align:center; margin-bottom:10px;"></div>
-        <div id="grid-equipos" class="grid"></div>
-      </div>
-    </div>
-
-    <!-- Pestaña Capex -->
-    <div class="accordion">
-      <div class="accordion-header" onclick="toggleAccordion(this)">
-        Capex <span>▼</span>
-      </div>
-      <div class="accordion-content">
-        <div id="grid-splits" class="grid"></div>
-      </div>
-    </div>
-  </main>
+  <div id="equipos" class="container"></div>
 
   <script>
-    let equiposData = {};
-    let splitsData = {};
-    let zonaActiva = "Todos";
+    async function loadEquipos(file, button) {
+      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+      button.classList.add('active');
 
-    async function cargarEquipos() {
-      try {
-        const resp = await fetch('equipos.json');
-        const data = await resp.json();
-        equiposData = data;
-        mostrarBotonesZonas();
-        mostrarEquipos();
-      } catch (error) {
-        console.error('Error al cargar equipos:', error);
-      }
+      const container = document.getElementById('equipos');
+      container.innerHTML = "<p>Cargando equipos...</p>";
 
       try {
-        const resp2 = await fetch('splits.json');
-        const data2 = await resp2.json();
-        splitsData = data2;
-        mostrarSplits();
-      } catch (error) {
-        console.error('Error al cargar splits:', error);
-      }
-    }
+        const response = await fetch(file);
+        const data = await response.json();
 
-    function mostrarBotonesZonas() {
-      const zonas = ["Todos", "Techo 1", "Techo 2", "Techo 3"];
-      const contZonas = document.getElementById('zonas');
-      contZonas.innerHTML = "";
-      zonas.forEach(z => {
-        const btn = document.createElement('button');
-        btn.className = 'btn-zone' + (z === zonaActiva ? ' active' : '');
-        btn.textContent = z;
-        btn.onclick = () => {
-          zonaActiva = z;
-          document.querySelectorAll('.btn-zone').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          mostrarEquipos();
-        };
-        contZonas.appendChild(btn);
-      });
-    }
-
-    function mostrarEquipos() {
-      const contenedor = document.getElementById('grid-equipos');
-      contenedor.innerHTML = "";
-      Object.entries(equiposData).forEach(([id, equipo]) => {
-        if (zonaActiva === "Todos" || equipo.ubicacion === zonaActiva) {
+        container.innerHTML = "";
+        for (const key in data) {
+          const eq = data[key];
           const card = document.createElement('div');
           card.className = 'card';
           card.innerHTML = `
-            <h3>${equipo.name}</h3>
-            <p><strong>Ubicación:</strong> ${equipo.ubicacion || '-'}</p>
-            <p><strong>Estado:</strong> ${equipo["Estado General"] || '-'}</p>
-            <a href="ficha.html?id=${id}" class="btn">Ver ficha</a>
+            <a href="ficha.html?id=${encodeURIComponent(key)}&src=${file}">
+              <h2>${eq.name || key}</h2>
+              ${eq.ubicacion ? `<p><strong>Ubicación:</strong> ${eq.ubicacion}</p>` : ""}
+              ${eq.salida ? `<p><strong>Salida:</strong> ${eq.salida}</p>` : ""}
+              ${eq["Estado General"] ? `<p><strong>Estado:</strong> ${eq["Estado General"]}</p>` : ""}
+            </a>
           `;
-          contenedor.appendChild(card);
+          container.appendChild(card);
         }
-      });
+      } catch (error) {
+        container.innerHTML = "<p style='color:red;'>Error al cargar los datos.</p>";
+        console.error(error);
+      }
     }
 
-    function mostrarSplits() {
-      const contenedor = document.getElementById('grid-splits');
-      contenedor.innerHTML = "";
-      Object.entries(splitsData).forEach(([id, equipo]) => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-          <h3>${equipo.name}</h3>
-          <p><strong>Ubicación:</strong> ${equipo.ubicacion || '-'}</p>
-          <p><strong>Estado:</strong> ${equipo["Estado General"] || '-'}</p>
-          <a href="ficha.html?id=${id}" class="btn">Ver ficha</a>
-        `;
-        contenedor.appendChild(card);
-      });
-    }
-
-    function toggleAccordion(header) {
-      const accordion = header.parentElement;
-      accordion.classList.toggle('active');
-    }
-
-    function filtrarEquipos() {
-      const query = document.getElementById('search').value.toLowerCase();
-      document.querySelectorAll('.card').forEach(card => {
-        const text = card.textContent.toLowerCase();
-        card.style.display = text.includes(query) ? 'block' : 'none';
-      });
-    }
-
-    cargarEquipos();
+    // Cargar por defecto Terrazas
+    loadEquipos('equipos.json', document.querySelector('.tab.active'));
   </script>
 </body>
 </html>
