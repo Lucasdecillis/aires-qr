@@ -77,7 +77,7 @@
 
     .equipos-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 15px;
     }
 
@@ -87,6 +87,7 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       padding: 15px;
       transition: transform 0.2s ease;
+      cursor: pointer;
     }
 
     .equipo-card:hover {
@@ -102,6 +103,11 @@
     .equipo-card p {
       margin: 4px 0;
       font-size: 0.95em;
+      line-height: 1.4em;
+    }
+
+    strong {
+      color: #0078d4;
     }
 
     a {
@@ -142,6 +148,7 @@
   </div>
 
   <script>
+    // Desplegable tipo acordeón
     const acc = document.getElementsByClassName("accordion");
     for (let i = 0; i < acc.length; i++) {
       acc[i].addEventListener("click", function() {
@@ -151,9 +158,10 @@
       });
     }
 
+    // Función general para mostrar cada grupo de equipos
     async function cargarEquipos() {
       try {
-        // Cargar Terrazas
+        // === TERrazas ===
         const resTer = await fetch("equipos.json");
         const dataTer = await resTer.json();
         const listaTer = document.getElementById("lista-terrazas");
@@ -167,12 +175,19 @@
               <h3>${eq.name || id}</h3>
               ${eq.ubicacion ? `<p><strong>Ubicación:</strong> ${eq.ubicacion}</p>` : ""}
               ${eq.salida ? `<p><strong>Salida:</strong> ${eq.salida}</p>` : ""}
-              ${eq["Estado General"] ? `<p><strong>Estado:</strong> ${eq["Estado General"]}</p>` : ""}
+              ${eq["Estado General"] ? `<p><strong>Estado General:</strong> ${eq["Estado General"]}</p>` : ""}
+              ${eq.Consumo ? `<p><strong>Consumo:</strong> ${eq.Consumo}</p>` : ""}
+              ${eq["Presión"] ? `<p><strong>Presión:</strong> ${eq["Presión"]}</p>` : ""}
+              ${eq["Compresor N°1"] ? `<p><strong>Compresor N°1:</strong> ${eq["Compresor N°1"]}</p>` : ""}
+              ${eq["Compresor N°2"] ? `<p><strong>Compresor N°2:</strong> ${eq["Compresor N°2"]}</p>` : ""}
+              ${eq["Circuito N°1"] ? `<p><strong>Circuito N°1:</strong> ${eq["Circuito N°1"]}</p>` : ""}
+              ${eq["Circuito N°2"] ? `<p><strong>Circuito N°2:</strong> ${eq["Circuito N°2"]}</p>` : ""}
+              ${eq.ultimo_servicio ? `<p><strong>Último servicio:</strong> ${eq.ultimo_servicio}</p>` : ""}
             </div>`;
           listaTer.appendChild(card);
         }
 
-        // Cargar Capex
+        // === CAPEX ===
         const resCapex = await fetch("splits.json");
         const dataCapex = await resCapex.json();
         const listaCapex = document.getElementById("lista-capex");
@@ -185,17 +200,7 @@
             <div class="equipo-card">
               <h3>${eq.name || id}</h3>
               ${eq.ubicacion ? `<p><strong>Ubicación:</strong> ${eq.ubicacion}</p>` : ""}
-              ${eq["Estado General"] ? `<p><strong>Estado:</strong> ${eq["Estado General"]}</p>` : ""}
-            </div>`;
-          listaCapex.appendChild(card);
-        }
-
-      } catch (error) {
-        console.error("Error al cargar los datos:", error);
-      }
-    }
-
-    cargarEquipos();
-  </script>
-</body>
-</html>
+              ${eq["Estado General"] ? `<p><strong>Estado General:</strong> ${eq["Estado General"]}</p>` : ""}
+              ${eq.Consumo ? `<p><strong>Consumo:</strong> ${eq.Consumo}</p>` : ""}
+              ${eq["Presión"] ? `<p><strong>Presión:</strong> ${eq["Presión"]}</p>` : ""}
+              ${eq["Compresor N°1"] ? `<p><strong>Compresor N°1:</strong> ${eq["Compresor N°1"]}</p>` : ""}
