@@ -3,68 +3,113 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ficha de Equipo</title>
+  <title>Ficha del Equipo</title>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f6f7f9;
-      padding: 20px;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: #f6f8fa;
+      margin: 0;
+      padding: 0;
+      color: #222;
     }
-    .card {
-      max-width: 500px;
-      margin: auto;
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
       background: white;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      padding: 20px;
+      padding: 30px;
+      border-radius: 14px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
-    h1 { text-align: center; }
+    h1 {
+      text-align: center;
+      color: #005b96;
+      margin-bottom: 10px;
+    }
     h2 {
-      margin-top: 20px;
-      font-size: 1.1em;
-      color: #333;
-      border-bottom: 1px solid #ddd;
-      padding-bottom: 4px;
+      text-align: center;
+      color: #444;
+      margin-top: 0;
+      font-weight: 500;
     }
-    p { margin: 6px 0; }
+    .info p {
+      background: #f2f4f7;
+      padding: 10px 15px;
+      border-radius: 8px;
+      margin: 8px 0;
+      display: flex;
+      justify-content: space-between;
+      font-size: 15px;
+    }
+    .info strong {
+      color: #003366;
+      font-weight: 600;
+    }
+    .back {
+      display: block;
+      margin-top: 20px;
+      text-align: center;
+    }
+    .back a {
+      text-decoration: none;
+      color: white;
+      background: #005b96;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+    .back a:hover {
+      background: #00457a;
+    }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1 id="equipo-nombre">Equipo</h1>
-    <div id="equipo-detalle">Cargando...</div>
+  <div class="container">
+    <h1 id="name"></h1>
+    <h2 id="ubicacion"></h2>
+    <div class="info" id="info"></div>
+    <div class="back">
+      <a href="index.html">← Volver al listado</a>
+    </div>
   </div>
 
   <script>
-    fetch('equipos.json')
-      .then(response => response.json())
-      .then(data => {
-        const params = new URLSearchParams(window.location.search);
-        const equipoID = params.get('id');
-        const e = data[equipoID];
-        if (!e) {
-          document.getElementById('equipo-detalle').innerHTML = "Equipo no encontrado.";
+    async function cargarDatos() {
+      const params = new URLSearchParams(window.location.search);
+      const equipoId = params.get("equipo");
+
+      try {
+        const response = await fetch("equipos.json");
+        const data = await response.json();
+        const equipo = data[equipoId];
+
+        if (!equipo) {
+          document.getElementById("info").innerHTML =
+            "<p>No se encontró información para este equipo.</p>";
           return;
         }
 
-        document.getElementById('equipo-nombre').textContent = e.name;
-        document.getElementById('equipo-detalle').innerHTML = `
-          <p><strong>Ubicación:</strong> ${e.ubicacion}</p>
-          <p><strong>Salida:</strong> ${e.salida}</p>
-          <p><strong>Estado General:</strong> ${e["Estado General"]}</p>
+        document.getElementById("name").textContent = equipo.name || "";
+        document.getElementById("ubicacion").textContent =
+          equipo.ubicacion || "";
 
-          <h2>Consumo</h2>
-          <p><strong>Compresor N°1:</strong> ${e["Compresor N°1"]}</p>
-          <p><strong>Compresor N°2:</strong> ${e["Compresor N°2"]}</p>
+        const infoDiv = document.getElementById("info");
+        infoDiv.innerHTML = "";
 
-          <h2>Presión</h2>
-          <p><strong>Circuito N°1:</strong> ${e["Circuito N°1"]}</p>
-          <p><strong>Circuito N°2:</strong> ${e["Circuito N°2"]}</p>
+        // Mostrar todos los campos excepto 'name' y 'ubicacion'
+        const exclude = ["name", "ubicacion"];
+        for (const [key, value] of Object.entries(equipo)) {
+          if (!exclude.includes(key)) {
+            const item = document.createElement("p");
+            item.innerHTML = `<strong>${key}:</strong> <span>${value || "-"}</span>`;
+            infoDiv.appendChild(item);
+          }
+        }
+      } catch (error) {
+        console.error("Error al cargar los datos:", error);
+      }
+    }
 
-          <h2>Último servicio</h2>
-          <p>${e.ultimo_servicio}</p>
-        `;
-      });
+    cargarDatos();
   </script>
 </body>
 </html>
