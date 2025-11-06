@@ -87,18 +87,18 @@
   "RT-06": {
     "name": "Rooftop 06",
     "ubicacion": "Techo 6",
-    "salida": "",
-    "Estado General": "",
+    "salida": "PB Baños/ Escaleras Mecanicas",
+    "Estado General": "OK",
     "ultimo_servicio": "",
     "Consumo": {
-      "Compresor N°1": "",
-      "Compresor N°2": ""
+      "Compresor N°1": "12 Amper",
+      "Compresor N°2": "13 Amper"
     },
     "Presión": {
-      "Succión Circuito N°1": "",
-      "Descarga Circuito N°1": "",
-      "Succión Circuito N°2": "",
-      "Descarga Circuito N°2": ""
+      "Succión Circuito N°1": "120 PSI",
+      "Descarga Circuito N°1": "340 PSI",
+      "Succión Circuito N°2": "100 PSI",
+      "Descarga Circuito N°2": "350 PSI"
     }
   },
   "RT-07": {
@@ -108,14 +108,14 @@
     "Estado General": "",
     "ultimo_servicio": "",
     "Consumo": {
-      "Compresor N°1": "",
-      "Compresor N°2": ""
+      "Compresor N°1": "13 Amper",
+      "Compresor N°2": "14 Amper"
     },
     "Presión": {
-      "Succión Circuito N°1": "",
-      "Descarga Circuito N°1": "",
-      "Succión Circuito N°2": "",
-      "Descarga Circuito N°2": ""
+      "Succión Circuito N°1": "115 PSI",
+      "Descarga Circuito N°1": "380 PSI",
+      "Succión Circuito N°2": "130 PSI",
+      "Descarga Circuito N°2": "410 PSI"
     }
   },
   "RT-08": {
@@ -125,14 +125,14 @@
     "Estado General": "",
     "ultimo_servicio": "",
     "Consumo": {
-      "Compresor N°1": "",
-      "Compresor N°2": ""
+      "Compresor N°1": "13 Amper",
+      "Compresor N°2": "12 Amper"
     },
     "Presión": {
-      "Succión Circuito N°1": "",
-      "Descarga Circuito N°1": "",
-      "Succión Circuito N°2": "",
-      "Descarga Circuito N°2": ""
+      "Succión Circuito N°1": "130 PSI",
+      "Descarga Circuito N°1": "360 PSI",
+      "Succión Circuito N°2": "110 PSI",
+      "Descarga Circuito N°2": "350 PSI"
     }
   },
   "RT-09": {
@@ -142,48 +142,48 @@
     "Estado General": "",
     "ultimo_servicio": "",
     "Consumo": {
-      "Compresor N°1": "",
-      "Compresor N°2": ""
+      "Compresor N°1": "12 Amper",
+      "Compresor N°2": "14 Amper"
     },
     "Presión": {
-      "Succión Circuito N°1": "",
-      "Descarga Circuito N°1": "",
-      "Succión Circuito N°2": "",
-      "Descarga Circuito N°2": ""
+      "Succión Circuito N°1": "110 PSI",
+      "Descarga Circuito N°1": "340 PSI",
+      "Succión Circuito N°2": "120 PSI",
+      "Descarga Circuito N°2": "320 PSI"
     }
   },
   "RT-10": {
     "name": "Rooftop 10",
     "ubicacion": "Techo 10",
     "salida": "",
-    "Estado General": "",
+    "Estado General": "OK",
     "ultimo_servicio": "",
     "Consumo": {
-      "Compresor N°1": "",
-      "Compresor N°2": ""
+      "Compresor N°1": "13 Amper",
+      "Compresor N°2": "12 Amper"
     },
     "Presión": {
-      "Succión Circuito N°1": "",
-      "Descarga Circuito N°1": "",
-      "Succión Circuito N°2": "",
-      "Descarga Circuito N°2": ""
+      "Succión Circuito N°1": "120 PSI",
+      "Descarga Circuito N°1": "360 PSI",
+      "Succión Circuito N°2": "120 PSI",
+      "Descarga Circuito N°2": "370 PSI"
     }
   },
   "RT-11": {
     "name": "Rooftop 11",
     "ubicacion": "Techo 11",
     "salida": "",
-    "Estado General": "",
+    "Estado General": "OK",
     "ultimo_servicio": "",
     "Consumo": {
-      "Compresor N°1": "",
-      "Compresor N°2": ""
+      "Compresor N°1": "12 Amper",
+      "Compresor N°2": "12 Amper"
     },
     "Presión": {
-      "Succión Circuito N°1": "",
-      "Descarga Circuito N°1": "",
-      "Succión Circuito N°2": "",
-      "Descarga Circuito N°2": ""
+      "Succión Circuito N°1": "110 PSI",
+      "Descarga Circuito N°1": "370 PSI",
+      "Succión Circuito N°2": "100 PSI",
+      "Descarga Circuito N°2": "370 PSI"
     }
   },
   "RT-12": {
@@ -193,14 +193,14 @@
     "Estado General": "",
     "ultimo_servicio": "",
     "Consumo": {
-      "Compresor N°1": "",
-      "Compresor N°2": ""
+      "Compresor N°1": "13 Amper",
+      "Compresor N°2": "12 Amper"
     },
     "Presión": {
-      "Succión Circuito N°1": "",
-      "Descarga Circuito N°1": "",
-      "Succión Circuito N°2": "",
-      "Descarga Circuito N°2": ""
+      "Succión Circuito N°1": "120 PSI",
+      "Descarga Circuito N°1": "380 PSI",
+      "Succión Circuito N°2": "130 PSI",
+      "Descarga Circuito N°2": "370 PSI"
     }
   },
   "RT-13": {
@@ -210,14 +210,14 @@
     "Estado General": "",
     "ultimo_servicio": "",
     "Consumo": {
-      "Compresor N°1": "",
-      "Compresor N°2": ""
+      "Compresor N°1": "13 Amper",
+      "Compresor N°2": "12 Amper"
     },
     "Presión": {
-      "Succión Circuito N°1": "",
-      "Descarga Circuito N°1": "",
-      "Succión Circuito N°2": "",
-      "Descarga Circuito N°2": ""
+      "Succión Circuito N°1": "150 PSI",
+      "Descarga Circuito N°1": "380 PSI",
+      "Succión Circuito N°2": "120 PSI",
+      "Descarga Circuito N°2": "360 PSI"
     }
   },
   "RT-14": {
@@ -227,14 +227,14 @@
     "Estado General": "",
     "ultimo_servicio": "",
     "Consumo": {
-      "Compresor N°1": "",
-      "Compresor N°2": ""
+      "Compresor N°1": "13 Amper",
+      "Compresor N°2": "12 Amper"
     },
     "Presión": {
-      "Succión Circuito N°1": "",
-      "Descarga Circuito N°1": "",
-      "Succión Circuito N°2": "",
-      "Descarga Circuito N°2": ""
+      "Succión Circuito N°1": "120 PSI",
+      "Descarga Circuito N°1": "350 PSI",
+      "Succión Circuito N°2": "130 PSI",
+      "Descarga Circuito N°2": "360 PSI"
     }
   },
   "RT-15": {
