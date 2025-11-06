@@ -3,222 +3,165 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Control de Equipos HVAC</title>
+  <title>Control de Equipos de Aire</title>
   <style>
     body {
-      font-family: "Segoe UI", Roboto, sans-serif;
-      background-color: #f5f7fa;
-      color: #333;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: #f4f6f8;
       margin: 0;
-      padding: 0;
+      padding: 20px;
+      color: #222;
     }
-
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #0078d4;
-      color: white;
-      padding: 16px 20px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      position: relative;
-      flex-wrap: wrap;
-    }
-
-    header img {
-      position: absolute;
-      left: 20px;
-      height: 65px;
-      width: auto;
-      border-radius: 10px;
-    }
-
-    header h1 {
-      font-size: 1.8em;
-      margin: 0;
+    h1 {
       text-align: center;
-      flex: 1;
+      color: #005b96;
     }
-
-    .container {
-      max-width: 1100px;
-      margin: 30px auto;
-      padding: 0 20px;
+    .tabs {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
     }
-
-    .accordion {
-      background-color: #0078d4;
-      color: white;
+    .tab {
+      padding: 10px 20px;
+      margin: 0 5px;
       cursor: pointer;
-      padding: 15px;
-      width: 100%;
-      border: none;
-      text-align: left;
-      outline: none;
-      font-size: 1.1em;
-      transition: background-color 0.2s ease;
+      border-radius: 8px;
+      background: #e0e6ed;
+      font-weight: 600;
+    }
+    .tab.active {
+      background: #005b96;
+      color: white;
+    }
+    .panel {
+      display: none;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .panel.active {
+      display: block;
+    }
+    .equipo {
+      background: white;
       border-radius: 10px;
+      padding: 15px;
       margin-bottom: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .equipo:hover {
+      background: #f7fbff;
+    }
+    .header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      flex-wrap: wrap;
     }
-
-    .accordion::after {
-      content: '+';
-      font-weight: bold;
-      transition: transform 0.2s ease;
+    .header strong {
+      font-size: 17px;
+      color: #003366;
     }
-
-    .accordion.active::after {
-      content: '−';
+    .header span {
+      color: #555;
     }
-
-    .accordion:hover {
-      background-color: #005fa3;
+    .detalles {
+      margin-top: 10px;
+      display: none;
+      border-top: 1px solid #ddd;
+      padding-top: 10px;
     }
-
-    .panel {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.3s ease-out;
-      background-color: white;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      padding: 0 15px;
-      margin-bottom: 15px;
-    }
-
-    .panel.open {
-      padding: 15px;
-    }
-
-    .equipos-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 15px;
-    }
-
-    .equipo-card {
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      padding: 15px;
-      transition: transform 0.2s ease;
-      cursor: pointer;
-    }
-
-    .equipo-card:hover {
-      transform: translateY(-3px);
-    }
-
-    .equipo-card h3 {
-      color: #0078d4;
-      margin-top: 0;
-      margin-bottom: 8px;
-    }
-
-    .equipo-card p {
-      margin: 4px 0;
-      font-size: 0.95em;
-      line-height: 1.4em;
-    }
-
-    strong {
-      color: #0078d4;
-    }
-
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-
-    @media (max-width: 600px) {
-      header img {
-        position: static;
-        margin-bottom: 10px;
-      }
-      header {
-        flex-direction: column;
-      }
-      header h1 {
-        font-size: 1.4em;
-      }
+    .detalles p {
+      margin: 5px 0;
+      display: flex;
+      justify-content: space-between;
+      background: #f2f4f7;
+      padding: 5px 10px;
+      border-radius: 6px;
     }
   </style>
 </head>
 <body>
-  <header>
-    <img src="1762428248701.png" alt="Logo">
-    <h1>Control de Equipos HVAC</h1>
-  </header>
-
-  <div class="container">
-    <button class="accordion">Terrazas</button>
-    <div class="panel" id="terrazas">
-      <div class="equipos-grid" id="lista-terrazas"></div>
-    </div>
-
-    <button class="accordion">Capex</button>
-    <div class="panel" id="capex">
-      <div class="equipos-grid" id="lista-capex"></div>
-    </div>
+  <h1>Control de Equipos de Aire Acondicionado</h1>
+  <div class="tabs">
+    <div class="tab active" data-tab="empresa1">Empresa 1</div>
+    <div class="tab" data-tab="empresa2">Empresa 2</div>
   </div>
 
+  <div id="empresa1" class="panel active"></div>
+  <div id="empresa2" class="panel"></div>
+
   <script>
-    // --- Acordeones con animación ---
-    document.querySelectorAll(".accordion").forEach(btn => {
-      btn.addEventListener("click", () => {
-        btn.classList.toggle("active");
-        const panel = btn.nextElementSibling;
-
-        if (panel.style.maxHeight) {
-          panel.style.maxHeight = null;
-          panel.classList.remove("open");
-        } else {
-          panel.style.maxHeight = panel.scrollHeight + "px";
-          panel.classList.add("open");
-        }
-      });
-    });
-
-    // --- Cargar equipos dinámicamente ---
     async function cargarEquipos() {
       try {
-        const cargar = async (archivo, contenedorId, origen) => {
-          const res = await fetch(archivo);
-          const data = await res.json();
-          const lista = document.getElementById(contenedorId);
+        const response = await fetch("equipos.json");
+        const data = await response.json();
 
-          for (const id in data) {
-            const eq = data[id];
-            const card = document.createElement("a");
-            card.href = `ficha.html?id=${id}&src=${archivo}`;
-            card.innerHTML = `
-              <div class="equipo-card">
-                <h3>${eq.name || id}</h3>
-                ${eq.ubicacion ? `<p><strong>Ubicación:</strong> ${eq.ubicacion}</p>` : ""}
-                ${eq.salida ? `<p><strong>Salida:</strong> ${eq.salida}</p>` : ""}
-                ${eq["Estado General"] ? `<p><strong>Estado General:</strong> ${eq["Estado General"]}</p>` : ""}
-                ${eq.Consumo ? `<p><strong>Consumo:</strong> ${eq.Consumo}</p>` : ""}
-                ${eq["Presión"] ? `<p><strong>Presión:</strong> ${eq["Presión"]}</p>` : ""}
-                ${eq["Compresor N°1"] ? `<p><strong>Compresor N°1:</strong> ${eq["Compresor N°1"]}</p>` : ""}
-                ${eq["Compresor N°2"] ? `<p><strong>Compresor N°2:</strong> ${eq["Compresor N°2"]}</p>` : ""}
-                ${eq["Circuito N°1"] ? `<p><strong>Circuito N°1:</strong> ${eq["Circuito N°1"]}</p>` : ""}
-                ${eq["Circuito N°2"] ? `<p><strong>Circuito N°2:</strong> ${eq["Circuito N°2"]}</p>` : ""}
-                ${eq.ultimo_servicio ? `<p><strong>Último servicio:</strong> ${eq.ultimo_servicio}</p>` : ""}
-              </div>`;
-            lista.appendChild(card);
-          }
-        };
+        // 🔸 Simulación: mitad de equipos para Empresa 1, mitad para Empresa 2
+        const keys = Object.keys(data);
+        const mitad = Math.ceil(keys.length / 2);
+        const empresa1Keys = keys.slice(0, mitad);
+        const empresa2Keys = keys.slice(mitad);
 
-        await cargar("equipos.json", "lista-terrazas");
-        await cargar("splits.json", "lista-capex");
+        const empresa1Div = document.getElementById("empresa1");
+        const empresa2Div = document.getElementById("empresa2");
 
-      } catch (error) {
-        console.error("Error al cargar los datos:", error);
+        renderEmpresa(empresa1Div, data, empresa1Keys);
+        renderEmpresa(empresa2Div, data, empresa2Keys);
+      } catch (err) {
+        console.error("Error al cargar equipos:", err);
       }
     }
+
+    function renderEmpresa(container, data, claves) {
+      container.innerHTML = "";
+
+      claves.forEach((key) => {
+        const eq = data[key];
+        const equipoDiv = document.createElement("div");
+        equipoDiv.className = "equipo";
+
+        // encabezado (visible siempre)
+        equipoDiv.innerHTML = `
+          <div class="header">
+            <strong>${eq.name || key}</strong>
+            <span>${eq.ubicacion || "Ubicación no definida"}</span>
+          </div>
+          <div class="header">
+            <span>Salida: ${eq.salida || "-"}</span>
+            <span>Último servicio: ${eq.ultimo_servicio || "-"}</span>
+          </div>
+        `;
+
+        // detalles (ocultos por defecto)
+        const detalles = document.createElement("div");
+        detalles.className = "detalles";
+        for (const [campo, valor] of Object.entries(eq)) {
+          if (!["name", "ubicacion", "salida", "ultimo_servicio"].includes(campo)) {
+            detalles.innerHTML += `<p><strong>${campo}:</strong><span>${valor || "-"}</span></p>`;
+          }
+        }
+        equipoDiv.appendChild(detalles);
+
+        // alternar visibilidad al hacer clic
+        equipoDiv.addEventListener("click", () => {
+          detalles.style.display =
+            detalles.style.display === "block" ? "none" : "block";
+        });
+
+        container.appendChild(equipoDiv);
+      });
+    }
+
+    // Tabs
+    document.querySelectorAll(".tab").forEach((tab) => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach((t) => t.classList.remove("active"));
+        document.querySelectorAll(".panel").forEach((p) => p.classList.remove("active"));
+        tab.classList.add("active");
+        document.getElementById(tab.dataset.tab).classList.add("active");
+      });
+    });
 
     cargarEquipos();
   </script>
