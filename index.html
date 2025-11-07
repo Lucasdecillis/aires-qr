@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Control de Equipos HVAC</title>
+  <title>Control de Equipos</title>
   <style>
     body {
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -12,128 +12,75 @@
       padding: 0;
       color: #222;
     }
-
-    header {
-      background: #0071c5;
-      color: white;
-      text-align: center;
-      padding: 25px 15px;
-    }
-
-    header img {
-      max-width: 130px;
-      display: block;
-      margin: 0 auto 10px;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 1.6rem;
-      font-weight: 700;
-    }
-
     .container {
       max-width: 900px;
-      margin: 20px auto;
-      padding: 0 15px;
-    }
-
-    .section {
+      margin: 40px auto;
       background: white;
-      margin-bottom: 15px;
-      border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      border-radius: 14px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #005b96;
+      margin-bottom: 30px;
+    }
+    .section {
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
       overflow: hidden;
     }
-
     .section-header {
       background: #005b96;
       color: white;
-      padding: 12px 20px;
-      font-weight: bold;
-      font-size: 1.1rem;
+      padding: 15px;
       cursor: pointer;
+      font-size: 18px;
+      font-weight: bold;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-
-    .section-header:hover {
-      background: #004a7c;
-    }
-
-    .arrow {
-      transition: transform 0.3s ease;
-    }
-
-    .arrow.open {
-      transform: rotate(180deg);
-    }
-
     .section-content {
       display: none;
-      padding: 15px 20px;
-    }
-
-    .equipo {
-      background: #f3f6f9;
+      background: #f9fafb;
       padding: 15px;
-      margin-bottom: 10px;
+    }
+    .equipo {
+      background: white;
+      padding: 15px;
       border-radius: 10px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      margin-bottom: 10px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
     }
-
-    .equipo h3 {
-      margin: 0 0 8px;
-      color: #005b96;
-    }
-
     .equipo p {
-      margin: 3px 0;
-      font-size: 14px;
+      margin: 5px 0;
     }
-
     .btn {
       display: inline-block;
-      margin-top: 10px;
-      background: #0071c5;
-      color: white;
-      padding: 8px 15px;
-      border-radius: 8px;
       text-decoration: none;
-      font-weight: 600;
-    }
-
-    .btn:hover {
       background: #005b96;
-    }
-
-    .search-box {
-      display: block;
-      width: 100%;
-      max-width: 400px;
-      margin: 15px auto;
-      padding: 10px 15px;
-      font-size: 15px;
+      color: white;
+      padding: 8px 16px;
       border-radius: 8px;
-      border: 1px solid #ccc;
-      outline: none;
+      font-size: 14px;
+      font-weight: bold;
+      margin-top: 10px;
     }
-
-    .search-box:focus {
-      border-color: #0071c5;
+    .btn:hover {
+      background: #00457a;
+    }
+    .arrow {
+      font-size: 20px;
     }
   </style>
 </head>
 <body>
-  <header>
-    <img src="logo.png" alt="Logo BCN" />
-    <h1>Control de Equipos HVAC</h1>
-  </header>
-
   <div class="container">
-    <input type="text" id="search" class="search-box" placeholder="Buscar equipo...">
+    <h1>Control de Equipos</h1>
 
+    <!-- Sección Terrazas -->
     <div class="section">
       <div class="section-header" onclick="toggleSection(this)">
         Terrazas
@@ -141,50 +88,75 @@
       </div>
       <div class="section-content" id="equipos-list"></div>
     </div>
+
+    <!-- Sección Splits -->
+    <div class="section">
+      <div class="section-header" onclick="toggleSection(this)">
+        Splits
+        <span class="arrow">▼</span>
+      </div>
+      <div class="section-content" id="splits-list"></div>
+    </div>
   </div>
 
   <script>
+    function toggleSection(header) {
+      const content = header.nextElementSibling;
+      const arrow = header.querySelector(".arrow");
+      if (content.style.display === "block") {
+        content.style.display = "none";
+        arrow.textContent = "▼";
+      } else {
+        content.style.display = "block";
+        arrow.textContent = "▲";
+      }
+    }
+
     async function cargarEquipos() {
       try {
         const response = await fetch("equipos.json");
         const data = await response.json();
-        const listContainer = document.getElementById("equipos-list");
-        listContainer.innerHTML = "";
 
-        // Mostrar Rooftops 1–19
+        const terrazasDiv = document.getElementById("equipos-list");
+        const splitsDiv = document.getElementById("splits-list");
+
+        // Rooftops (Terrazas)
         Object.entries(data).forEach(([id, equipo]) => {
-          const card = document.createElement("div");
-          card.classList.add("equipo");
-          card.innerHTML = `
-            <h3>${equipo.name}</h3>
-            <p><strong>Techo:</strong> ${equipo.ubicacion || "-"}</p>
-            <p><strong>Salida:</strong> ${equipo.salida || "-"}</p>
-            <p><strong>Estado General:</strong> ${equipo["Estado General"] || "-"}</p>
-            <p><strong>Último Servicio:</strong> ${equipo.ultimo_servicio || "-"}</p>
-            <a class="btn" href="ficha.html?equipo=${id}">Ver ficha</a>
-          `;
-          listContainer.appendChild(card);
+          if (id.startsWith("RT-")) {
+            const div = document.createElement("div");
+            div.className = "equipo";
+            div.innerHTML = `
+              <p><strong>${equipo.name}</strong></p>
+              <p>Ubicación: ${equipo.ubicacion || "-"}</p>
+              <p>Salida: ${equipo.salida || "-"}</p>
+              <p>Estado General: ${equipo["Estado General"] || "-"}</p>
+              <p>Último Servicio: ${equipo.ultimo_servicio || "-"}</p>
+              <a class="btn" href="ficha.html?equipo=${id}">Ver ficha</a>
+            `;
+            terrazasDiv.appendChild(div);
+          }
         });
 
-        // Filtro de búsqueda
-        document.getElementById("search").addEventListener("input", (e) => {
-          const term = e.target.value.toLowerCase();
-          document.querySelectorAll(".equipo").forEach(card => {
-            card.style.display = card.innerText.toLowerCase().includes(term) ? "" : "none";
-          });
+        // Splits
+        Object.entries(data).forEach(([id, equipo]) => {
+          if (id.startsWith("SP-")) {
+            const div = document.createElement("div");
+            div.className = "equipo";
+            div.innerHTML = `
+              <p><strong>${equipo.name}</strong></p>
+              <p>Modelo: ${equipo.modelo || "-"}</p>
+              <p>Estado General: ${equipo["Estado General"] || "-"}</p>
+              <p>Último Servicio: ${equipo.ultimo_servicio || "-"}</p>
+              <a class="btn" href="ficha.html?equipo=${id}">Ver ficha</a>
+            `;
+            splitsDiv.appendChild(div);
+          }
         });
-
       } catch (error) {
-        console.error("Error al cargar el listado de equipos:", error);
-        document.getElementById("equipos-list").innerHTML = "<p>Error al cargar los equipos.</p>";
+        console.error("Error al cargar los equipos:", error);
+        document.getElementById("equipos-list").innerHTML =
+          "<p>Error al cargar el listado de equipos.</p>";
       }
-    }
-
-    function toggleSection(header) {
-      const arrow = header.querySelector(".arrow");
-      arrow.classList.toggle("open");
-      const content = header.nextElementSibling;
-      content.style.display = content.style.display === "block" ? "none" : "block";
     }
 
     cargarEquipos();
