@@ -320,8 +320,8 @@
       "Descarga Circuito N°1": "",
       "Succión Circuito N°2": "",
       "Descarga Circuito N°2": ""
-    },
-}
+    }
+},
 "Splits": {
   "SP-01": {
     "name": "Split 01",
@@ -742,5 +742,3 @@
     "presion_baja": "63 psi"
   }
 }
-  }
-
