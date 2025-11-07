@@ -321,7 +321,7 @@
       "Succión Circuito N°2": "",
       "Descarga Circuito N°2": ""
     }
-},
+}
 "Splits": {
   "SP-01": {
     "name": "Split 01",
@@ -739,6 +739,6 @@
     "consumo_fan": "0.75 A",
     "consumo_compresor": "3.8 A",
     "presion_alta": "220 psi",
-    "presion_baja": "63 psi"
+    "presion_baja": "63 psi"}
   }
 }
