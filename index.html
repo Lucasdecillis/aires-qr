@@ -6,73 +6,66 @@
   <title>Control de Equipos</title>
   <style>
     body {
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background: #f6f8fa;
+      font-family: Arial, sans-serif;
+      background-color: #f1f1f1;
       margin: 0;
       padding: 0;
-      color: #222;
     }
     .container {
-      max-width: 900px;
+      max-width: 600px;
       margin: 40px auto;
       background: white;
-      padding: 30px;
-      border-radius: 14px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
     h1 {
       text-align: center;
-      color: #005b96;
-      margin-bottom: 30px;
+      color: #004a7c;
     }
     .section {
-      margin-bottom: 20px;
-      border: 1px solid #ccc;
+      margin-top: 20px;
       border-radius: 10px;
       overflow: hidden;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
     }
     .section-header {
-      background: #005b96;
+      background: #004a7c;
       color: white;
-      padding: 15px;
-      cursor: pointer;
-      font-size: 18px;
+      padding: 10px;
       font-weight: bold;
+      cursor: pointer;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    .section-content {
-      display: none;
-      background: #f9fafb;
-      padding: 15px;
-    }
-    .equipo {
-      background: white;
-      padding: 15px;
-      border-radius: 10px;
-      margin-bottom: 10px;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-    }
-    .equipo p {
-      margin: 5px 0;
-    }
-    .btn {
-      display: inline-block;
-      text-decoration: none;
-      background: #005b96;
-      color: white;
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: bold;
-      margin-top: 10px;
-    }
-    .btn:hover {
-      background: #00457a;
+    .section-header:hover {
+      background: #006bb3;
     }
     .arrow {
-      font-size: 20px;
+      transition: transform 0.3s;
+    }
+    .arrow.open {
+      transform: rotate(180deg);
+    }
+    .section-content {
+      display: none;
+      background: #fff;
+      padding: 10px;
+    }
+    .equipo {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+    .equipo:hover {
+      background: #f9f9f9;
+    }
+    .error {
+      color: red;
+      font-size: 14px;
     }
   </style>
 </head>
@@ -89,7 +82,7 @@
       <div class="section-content" id="equipos-list"></div>
     </div>
 
-    <!-- Sección Splits -->
+    <!-- Nueva Sección Splits -->
     <div class="section">
       <div class="section-header" onclick="toggleSection(this)">
         Splits
@@ -97,65 +90,67 @@
       </div>
       <div class="section-content" id="splits-list"></div>
     </div>
+
   </div>
 
   <script>
+    // Función para abrir/cerrar secciones
     function toggleSection(header) {
       const content = header.nextElementSibling;
       const arrow = header.querySelector(".arrow");
-      if (content.style.display === "block") {
-        content.style.display = "none";
-        arrow.textContent = "▼";
-      } else {
-        content.style.display = "block";
-        arrow.textContent = "▲";
-      }
+      content.style.display = content.style.display === "block" ? "none" : "block";
+      arrow.classList.toggle("open");
     }
 
+    // Cargar equipos desde equipos.json
     async function cargarEquipos() {
       try {
         const response = await fetch("equipos.json");
         const data = await response.json();
 
-        const terrazasDiv = document.getElementById("equipos-list");
-        const splitsDiv = document.getElementById("splits-list");
-
-        // Rooftops (Terrazas)
-        Object.entries(data).forEach(([id, equipo]) => {
-          if (id.startsWith("RT-")) {
+        // TERAZZAS
+        const terrazasContainer = document.getElementById("equipos-list");
+        terrazasContainer.innerHTML = "";
+        for (const [key, equipo] of Object.entries(data)) {
+          // Mostramos solo los que tienen "RT-" (Rooftop)
+          if (key.startsWith("RT-")) {
             const div = document.createElement("div");
             div.className = "equipo";
             div.innerHTML = `
-              <p><strong>${equipo.name}</strong></p>
-              <p>Ubicación: ${equipo.ubicacion || "-"}</p>
-              <p>Salida: ${equipo.salida || "-"}</p>
-              <p>Estado General: ${equipo["Estado General"] || "-"}</p>
-              <p>Último Servicio: ${equipo.ultimo_servicio || "-"}</p>
-              <a class="btn" href="ficha.html?equipo=${id}">Ver ficha</a>
+              <strong>${equipo.name}</strong><br>
+              Ubicación: ${equipo.ubicacion}<br>
+              Estado: ${equipo["Estado General"]}<br>
+              Último servicio: ${equipo.ultimo_servicio || "—"}
             `;
-            terrazasDiv.appendChild(div);
+            div.onclick = () => window.location.href = `ficha.html?equipo=${key}`;
+            terrazasContainer.appendChild(div);
           }
-        });
+        }
 
-        // Splits
-        Object.entries(data).forEach(([id, equipo]) => {
-          if (id.startsWith("SP-")) {
+        // SPLITS
+        const splitsContainer = document.getElementById("splits-list");
+        splitsContainer.innerHTML = "";
+        for (const [key, equipo] of Object.entries(data)) {
+          // Mostramos solo los que empiezan con "SP-"
+          if (key.startsWith("SP-")) {
             const div = document.createElement("div");
             div.className = "equipo";
             div.innerHTML = `
-              <p><strong>${equipo.name}</strong></p>
-              <p>Modelo: ${equipo.modelo || "-"}</p>
-              <p>Estado General: ${equipo["Estado General"] || "-"}</p>
-              <p>Último Servicio: ${equipo.ultimo_servicio || "-"}</p>
-              <a class="btn" href="ficha.html?equipo=${id}">Ver ficha</a>
+              <strong>${equipo.name}</strong><br>
+              Modelo: ${equipo.modelo}<br>
+              Estado: ${equipo["Estado General"]}<br>
+              Último servicio: ${equipo.ultimo_servicio || "—"}
             `;
-            splitsDiv.appendChild(div);
+            div.onclick = () => window.location.href = `ficha.html?equipo=${key}`;
+            splitsContainer.appendChild(div);
           }
-        });
+        }
+
       } catch (error) {
-        console.error("Error al cargar los equipos:", error);
         document.getElementById("equipos-list").innerHTML =
-          "<p>Error al cargar el listado de equipos.</p>";
+          "<p class='error'>Error al cargar el listado de equipos.</p>";
+        document.getElementById("splits-list").innerHTML =
+          "<p class='error'>Error al cargar el listado de splits.</p>";
       }
     }
 
