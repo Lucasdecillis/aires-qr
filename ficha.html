@@ -28,8 +28,8 @@
     h2 {
       text-align: center;
       color: #444;
-      font-weight: 500;
       margin-top: 0;
+      font-weight: 500;
     }
     .info p {
       background: #f2f4f7;
@@ -44,16 +44,13 @@
       color: #003366;
       font-weight: 600;
     }
-    .section {
-      margin-top: 25px;
-    }
-    .section h3 {
+    .section-title {
       background: #005b96;
       color: white;
       padding: 10px 15px;
       border-radius: 8px;
-      font-size: 16px;
-      margin-bottom: 10px;
+      font-weight: bold;
+      margin-top: 20px;
     }
   </style>
 </head>
@@ -61,18 +58,7 @@
   <div class="container">
     <h1 id="name"></h1>
     <h2 id="ubicacion"></h2>
-
-    <div class="info" id="general"></div>
-
-    <div class="section" id="consumo-section" style="display:none;">
-      <h3>Consumo</h3>
-      <div class="info" id="consumo"></div>
-    </div>
-
-    <div class="section" id="presion-section" style="display:none;">
-      <h3>Presión</h3>
-      <div class="info" id="presion"></div>
-    </div>
+    <div class="info" id="info"></div>
   </div>
 
   <script>
@@ -86,47 +72,68 @@
         const equipo = data[equipoId];
 
         if (!equipo) {
-          document.querySelector(".container").innerHTML =
+          document.getElementById("info").innerHTML =
             "<p>No se encontró información para este equipo.</p>";
           return;
         }
 
-        // Encabezado
         document.getElementById("name").textContent = equipo.name || "";
-        document.getElementById("ubicacion").textContent = equipo.ubicacion || "";
+        document.getElementById("ubicacion").textContent =
+          equipo.ubicacion || "";
 
-        // Datos generales
-        const generalInfo = document.getElementById("general");
-        generalInfo.innerHTML = `
-          <p><strong>Ubicación:</strong> <span>${equipo.ubicacion || "-"}</span></p>
-          <p><strong>Salida:</strong> <span>${equipo.salida || "-"}</span></p>
-          <p><strong>Estado General:</strong> <span>${equipo["Estado General"] || "-"}</span></p>
-          <p><strong>Último Servicio:</strong> <span>${equipo.ultimo_servicio || "-"}</span></p>
-        `;
+        const infoDiv = document.getElementById("info");
+        infoDiv.innerHTML = "";
 
-        // Sección Consumo
-        if (equipo.Consumo) {
-          document.getElementById("consumo-section").style.display = "block";
-          const consumoDiv = document.getElementById("consumo");
-          consumoDiv.innerHTML = "";
-          for (const [key, value] of Object.entries(equipo.Consumo)) {
-            consumoDiv.innerHTML += `<p><strong>${key}:</strong> <span>${value || "-"}</span></p>`;
+        // Campos principales
+        const camposPrincipales = [
+          "salida",
+          "Estado General",
+          "ultimo_servicio",
+        ];
+
+        camposPrincipales.forEach((campo) => {
+          const item = document.createElement("p");
+          item.innerHTML = `<strong>${campo}:</strong> <span>${
+            equipo[campo] || "-"
+          }</span>`;
+          infoDiv.appendChild(item);
+        });
+
+        // --- Sección de Consumo ---
+        if (equipo["Consumo"]) {
+          const consumo = equipo["Consumo"];
+          const consumoTitle = document.createElement("div");
+          consumoTitle.className = "section-title";
+          consumoTitle.textContent = "Consumo";
+          infoDiv.appendChild(consumoTitle);
+
+          for (const [key, value] of Object.entries(consumo)) {
+            const item = document.createElement("p");
+            item.innerHTML = `<strong>${key}:</strong> <span>${
+              value || "-"
+            }</span>`;
+            infoDiv.appendChild(item);
           }
         }
 
-        // Sección Presión
+        // --- Sección de Presión ---
         if (equipo["Presión"]) {
-          document.getElementById("presion-section").style.display = "block";
-          const presionDiv = document.getElementById("presion");
-          presionDiv.innerHTML = "";
-          for (const [key, value] of Object.entries(equipo["Presión"])) {
-            presionDiv.innerHTML += `<p><strong>${key}:</strong> <span>${value || "-"}</span></p>`;
+          const presion = equipo["Presión"];
+          const presionTitle = document.createElement("div");
+          presionTitle.className = "section-title";
+          presionTitle.textContent = "Presión";
+          infoDiv.appendChild(presionTitle);
+
+          for (const [key, value] of Object.entries(presion)) {
+            const item = document.createElement("p");
+            item.innerHTML = `<strong>${key}:</strong> <span>${
+              value || "-"
+            }</span>`;
+            infoDiv.appendChild(item);
           }
         }
       } catch (error) {
         console.error("Error al cargar los datos:", error);
-        document.querySelector(".container").innerHTML =
-          "<p>Error al cargar los datos del equipo.</p>";
       }
     }
 
