@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ficha del Split</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: #f6f8fa;
+      margin: 0;
+      padding: 0;
+      color: #222;
+    }
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 14px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #005b96;
+      margin-bottom: 5px;
+    }
+    h2 {
+      text-align: center;
+      color: #444;
+      margin-top: 0;
+      font-weight: 500;
+    }
+    .info p {
+      background: #f2f4f7;
+      padding: 10px 15px;
+      border-radius: 8px;
+      margin: 8px 0;
+      display: flex;
+      justify-content: space-between;
+      font-size: 15px;
+    }
+    .info strong {
+      color: #003366;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 id="name"></h1>
+    <h2 id="ubicacion"></h2>
+    <div class="info" id="info"></div>
+  </div>
+
+  <script>
+    async function cargarDatos() {
+      const params = new URLSearchParams(window.location.search);
+      const equipoId = params.get("equipo");
+
+      try {
+        const response = await fetch("equipos.json");
+        const data = await response.json();
+        const equipo = data.Splits[equipoId];
+
+        if (!equipo) {
+          document.getElementById("info").innerHTML =
+            "<p>No se encontró información para este Split.</p>";
+          return;
+        }
+
+        document.getElementById("name").textContent = equipo.name || "";
+        document.getElementById("ubicacion").textContent =
+          equipo.ubicacion || "";
+
+        const infoDiv = document.getElementById("info");
+        infoDiv.innerHTML = "";
+
+        const campos = [
+          "modelo",
+          "Estado General",
+          "ultimo_servicio",
+          "Consumo de Fan",
+          "Consumo de Compresor",
+          "Presión",
+        ];
+
+        campos.forEach((campo) => {
+          const item = document.createElement("p");
+          item.innerHTML = `<strong>${campo}:</strong> <span>${
+            equipo[campo] || "-"
+          }</span>`;
+          infoDiv.appendChild(item);
+        });
+      } catch (error) {
+        console.error("Error al cargar los datos:", error);
+      }
+    }
+
+    cargarDatos();
+  </script>
+</body>
+</html>
