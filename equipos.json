@@ -320,8 +320,8 @@
       "Descarga Circuito N°1": "",
       "Succión Circuito N°2": "",
       "Descarga Circuito N°2": ""
-    }
-{
+    },
+}
 "Splits": {
   "SP-01": {
     "name": "Split 01",
@@ -510,7 +510,6 @@
     "presion_alta": "215 psi",
     "presion_baja": "62 psi"
   },
-"Splits": {
   "SP-18": {
     "name": "Split 18",
     "ubicacion": "Oficina 1",
@@ -741,7 +740,7 @@
     "consumo_compresor": "3.8 A",
     "presion_alta": "220 psi",
     "presion_baja": "63 psi"
-  },
+  }
 }
   }
 
